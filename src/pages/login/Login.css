@@ -1,0 +1,17 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container > .content {
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-comp.button-area > .ant-btn:first-child {
+    margin-right: 8px;
+}

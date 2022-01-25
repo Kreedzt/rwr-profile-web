@@ -11,15 +11,17 @@ import Group from "./pages/group/Group";
 
 const App: FC = () => {
   return (
-    <Router>
-      <Login path="/login" />
-      <Register path="/register" />
-      <Home path="/">
-        <Stash path="stash" />
-        <XP path="xp" />
-        <Group path="group" />
-      </Home>
-    </Router>
+    <div className="app-container">
+      <Router>
+        <Login path="/login" />
+        <Register path="/register" />
+        <Home path="/">
+          <Stash path="stash" />
+          <XP path="xp" />
+          <Group path="group" />
+        </Home>
+      </Router>
+    </div>
   );
 };
 
