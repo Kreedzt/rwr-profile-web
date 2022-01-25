@@ -1,0 +1,16 @@
+.home-layout {
+  height: 100vh;
+}
+
+.home-header {
+  height: 64px;
+}
+
+.home-content {
+  overflow: auto;
+}
+
+.home-footer {
+  height: 70px;
+  background-color: #fff;
+}

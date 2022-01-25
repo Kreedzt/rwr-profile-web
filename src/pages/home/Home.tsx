@@ -1,16 +1,10 @@
 import React, { FC, useCallback } from "react";
-import {
-  RouteComponentProps,
-  Router,
-  Link,
-  useNavigate,
-  navigate,
-} from "@reach/router";
+import { RouteComponentProps, Link, useNavigate } from "@reach/router";
 import { Breadcrumb, Button, Layout, Menu } from "antd";
 import { navRouters } from "./routers";
-import Stash from "../stash/Stash";
 import { VERSION } from "../../constants";
 import { StorageService } from "../../services/storage";
+import "./Home.css";
 
 const { Header, Content, Footer } = Layout;
 
@@ -19,12 +13,12 @@ const Home: FC<RouteComponentProps> = ({ children }) => {
 
   const onQuit = useCallback(() => {
     StorageService.clearUserInfo();
-      navigate("/login");
+    navigate("/login");
   }, []);
 
   return (
-    <Layout className="layout">
-      <Header>
+    <Layout className="home-layout">
+      <Header className="home-header">
         <div className="logo" />
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
           {navRouters.map((item) => {
@@ -41,10 +35,10 @@ const Home: FC<RouteComponentProps> = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Header>
-      <Content style={{ padding: "0 50px" }}>
+      <Content className="home-content" style={{ padding: "0 50px" }}>
         <div className="site-layout-content">{children}</div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
+      <Footer className="home-footer" style={{ textAlign: "center" }}>
         RWR 存档管理系统, v: {VERSION}
       </Footer>
     </Layout>
