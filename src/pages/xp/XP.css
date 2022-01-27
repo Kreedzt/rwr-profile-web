@@ -1,0 +1,11 @@
+.xp > .xp-info {
+    border: 1px solid #7ec1ff;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.xp > .xp-control {
+    border: 1px solid #13c2c2;
+    padding: 20px;
+    margin: 20px 0;
+}

@@ -1,8 +1,12 @@
 import React, { FC, useCallback } from "react";
 import { RouteComponentProps, Link, useNavigate } from "@reach/router";
-import { Breadcrumb, Button, Layout, Menu } from "antd";
+import { Breadcrumb, Button, Dropdown, Layout, Menu } from "antd";
 import { navRouters } from "./routers";
-import { VERSION } from "../../constants";
+import {
+  USER_ID_STORAGE_KEY,
+  USER_NAME_STORAGE_KEY,
+  VERSION,
+} from "../../constants";
 import { StorageService } from "../../services/storage";
 import "./Home.css";
 
@@ -10,6 +14,8 @@ const { Header, Content, Footer } = Layout;
 
 const Home: FC<RouteComponentProps> = ({ children }) => {
   const navigate = useNavigate();
+  const userName = localStorage.getItem(USER_NAME_STORAGE_KEY);
+  const userId = localStorage.getItem(USER_ID_STORAGE_KEY);
 
   const onQuit = useCallback(() => {
     StorageService.clearUserInfo();
@@ -19,21 +25,31 @@ const Home: FC<RouteComponentProps> = ({ children }) => {
   return (
     <Layout className="home-layout">
       <Header className="home-header">
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
-          {navRouters.map((item) => {
-            return (
-              <Menu.Item key={item.link}>
-                <Link to={`${item.link}`}>{item.name}</Link>
-              </Menu.Item>
-            );
-          })}
-          <Menu.Item>
-            <Button danger onClick={onQuit}>
-              退出登录
-            </Button>
-          </Menu.Item>
-        </Menu>
+        <div className="left-wrapper">
+          <div className="logo" />
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
+            {navRouters.map((item) => {
+              return (
+                <Menu.Item key={item.link}>
+                  <Link to={`${item.link}`}>{item.name}</Link>
+                </Menu.Item>
+              );
+            })}
+          </Menu>
+        </div>
+        <div className="avatar">
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item onClick={onQuit}>退出登录</Menu.Item>
+              </Menu>
+            }
+          >
+            <span>
+              用户ID/名称: {userId}/{userName}
+            </span>
+          </Dropdown>
+        </div>
       </Header>
       <Content className="home-content" style={{ padding: "0 50px" }}>
         <div className="site-layout-content">{children}</div>

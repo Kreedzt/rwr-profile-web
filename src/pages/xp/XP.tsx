@@ -3,6 +3,7 @@ import { Button, message, Modal } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import DataAlert from "../../components/DataAleart/DataAlert";
 import { PersonService } from "../../services/person";
+import "./XP.css";
 
 const XP: FC<RouteComponentProps> = () => {
   const [xp, setXp] = useState<number>();
@@ -37,14 +38,20 @@ const XP: FC<RouteComponentProps> = () => {
   }, []);
 
   return (
-    <div>
+    <div className="xp">
       <DataAlert />
 
-      <p>XP(数据可能不准确): {xp}</p>
-      <Button loading={queryBtnLoading} onClick={onQueryXP}>
-        获取XP信息
-      </Button>
-      <Button onClick={onResetTo5Stars}>重置为5星人形</Button>
+      <div className="xp-info">
+        <p>XP(数据可能不准确): {xp}</p>
+        <Button loading={queryBtnLoading} onClick={onQueryXP}>
+          获取XP信息
+        </Button>
+      </div>
+      <div className="xp-control">
+        <Button type="primary" onClick={onResetTo5Stars}>
+          重置为5星人形
+        </Button>
+      </div>
     </div>
   );
 };

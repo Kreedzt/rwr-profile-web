@@ -3,6 +3,8 @@ import DataAlert from "../../components/DataAleart/DataAlert";
 import { RouteComponentProps } from "@reach/router";
 import { Button, message, Modal, Select } from "antd";
 import { PersonService } from "../../services/person";
+import "./Group.css";
+import GroupReadme from "./GroupReadme";
 
 const groupTypeList: Array<{
   label: string;
@@ -75,14 +77,17 @@ const Group: FC<RouteComponentProps> = () => {
   }, [nextGroupData]);
 
   return (
-    <div>
+    <div className="soldier-group">
       <DataAlert />
-      <p>当前改造(default为无改):{groupData}</p>
-      <Button onClick={onQueryStash} loading={queryBtnLoading}>
-        点我获取存档信息
-      </Button>
-      <div>
-        更换改造为:
+      <div className="soldier-info">
+        <p>当前改造(default为无改): {groupData}</p>
+        <Button onClick={onQueryStash} loading={queryBtnLoading}>
+          点我获取存档信息
+        </Button>
+      </div>
+
+      <div className="soldier-control">
+        <span>更换改造为:</span>
         <Select
           value={nextGroupData}
           onChange={setNextGroupData}
@@ -92,6 +97,8 @@ const Group: FC<RouteComponentProps> = () => {
           提交改造
         </Button>
       </div>
+
+      <GroupReadme />
     </div>
   );
 };

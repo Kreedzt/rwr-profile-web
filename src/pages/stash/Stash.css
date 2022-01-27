@@ -1,0 +1,15 @@
+.stash > .stash-control-area {
+    border: 1px solid #7ec1ff;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.stash-control-area > .ant-btn:first-child {
+    margin-right: 10px;
+}
+
+.stash > .stash-mode-area {
+    border: 1px solid #13c2c2;
+    padding: 20px;
+    margin: 10px 0;
+}

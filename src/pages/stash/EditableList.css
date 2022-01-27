@@ -1,0 +1,44 @@
+.stash-comp.editable-list {
+    border: 1px solid #91d5ff;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.stash-comp.editable-list > .count-area {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.stash-comp.editable-list > .count-area span.normal {
+    color: #13c2c2;
+}
+
+.stash-comp.editable-list > .count-area span.error {
+    color: #f5222d;
+}
+
+.stash-comp.editable-list > .quick-control-area {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.stash-comp.editable-list > .quick-control-area > .quick-btn-list {
+    display: flex;
+    column-gap: 10px;
+}
+
+.stash-comp.editable-list > .code-paste-area {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.stash-comp.editable-list > .code-paste-area > .code-paste-input {
+    margin-bottom: 10px;
+}
+
+.stash-comp.editable-list > .content-area {
+    padding: 10px;
+}

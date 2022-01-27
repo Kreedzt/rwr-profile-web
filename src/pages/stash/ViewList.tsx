@@ -2,22 +2,23 @@ import React, { FC, useCallback } from "react";
 import { Button, List, message, Table } from "antd";
 import Clipboard from "react-clipboard.js";
 import { StashItem } from "../../models/person";
+import './ViewList.css';
 
 interface StashListProps {
   list: StashItem[];
 }
 
-const StashList: FC<StashListProps> = ({ list }) => {
+const ViewList: FC<StashListProps> = ({ list }) => {
   const onCopy = useCallback(() => {
     message.success("复制成功");
   }, []);
 
   return (
-    <div className="">
-      <div>
+    <div className="stash-comp view-list">
+      <div className="header">
         <p>展示方式: key/index/class</p>
       </div>
-      <List>
+      <List className="content">
         {list.map((item, index) => {
           return (
             <List.Item key={`${item.key}-${index}`}>
@@ -33,4 +34,4 @@ const StashList: FC<StashListProps> = ({ list }) => {
   );
 };
 
-export default StashList;
+export default ViewList;

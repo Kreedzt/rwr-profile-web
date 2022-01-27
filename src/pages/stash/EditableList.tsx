@@ -3,6 +3,7 @@ import { Button, Input, List, message, Modal } from "antd";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import { code_list } from "./code";
+import "./EditableList.css";
 
 interface StashListProps {
   list: StashItem[];
@@ -89,46 +90,61 @@ const EditableStashList: FC<StashListProps> = ({ list }) => {
   }, [realList]);
 
   return (
-    <div>
-      <p>当前总数: {realList.length}/300</p>
-      <div>
-        <p>快捷操作区(快速添加一项物品)</p>
-        {code_list.map((c) => {
-          return (
-            <Button key={c.key} onClick={() => onQuickAdd(c)}>
-              {c.label}
-            </Button>
-          );
-        })}
+    <div className="stash-comp editable-list">
+      <div className="count-area">
+        <p>
+          当前总数:&nbsp;
+          <span className={realList.length > 300 ? "error" : "normal"}>
+            {realList.length}
+          </span>
+          /300
+        </p>
       </div>
-      <div>
-        代码粘贴区
+
+      <div className="quick-control-area">
+        <p>快捷操作区(快速添加一项物品)</p>
+
+        <div className="quick-btn-list">
+          {code_list.map((c) => {
+            return (
+              <Button key={c.key} onClick={() => onQuickAdd(c)}>
+                {c.label}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="code-paste-area">
+        <p>代码粘贴区</p>
         <Input.TextArea
+          className="code-paste-input"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder={"代码粘贴到此处"}
         />
         <Button onClick={onParseCode}>解析代码并添加</Button>
       </div>
-      <div>
+
+      <div className="content-area">
         <p>展示方式: key/index/class</p>
         <Button type="primary" onClick={onSave}>
           保存并写入存档
         </Button>
+        <List>
+          {realList.map((item, index) => {
+            return (
+              <List.Item key={`${item.key}-${index}`}>
+                {item.key} / {item.index} / {item.class}
+                <Button onClick={() => onCopy(item)}>追加复制</Button>
+                <Button danger onClick={() => onDelete(index)}>
+                  删除
+                </Button>
+              </List.Item>
+            );
+          })}
+        </List>
       </div>
-      <List>
-        {realList.map((item, index) => {
-          return (
-            <List.Item key={`${item.key}-${index}`}>
-              {item.key} / {item.index} / {item.class}
-              <Button onClick={() => onCopy(item)}>追加复制</Button>
-              <Button danger onClick={() => onDelete(index)}>
-                删除
-              </Button>
-            </List.Item>
-          );
-        })}
-      </List>
     </div>
   );
 };

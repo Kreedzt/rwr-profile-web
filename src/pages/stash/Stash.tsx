@@ -2,10 +2,11 @@ import React, { FC, useCallback, useState } from "react";
 import { RouteComponentProps } from "@reach/router";
 import { Alert, Button } from "antd";
 import { PersonService } from "../../services/person";
-import StashList from "./List";
+import ViewList from "./ViewList";
 import { StashItem } from "../../models/person";
 import EditableStashList from "./EditableList";
 import DataAlert from "../../components/DataAleart/DataAlert";
+import "./Stash.css";
 
 type StashMode = "view" | "edit";
 
@@ -40,13 +41,19 @@ const Stash: FC<RouteComponentProps> = () => {
   return (
     <div className="stash">
       <DataAlert />
-      <Button onClick={onQueryStash} loading={queryBtnLoading}>
-        点我获取存档信息
-      </Button>
-      <Button onClick={switchMode}>点我切换模式</Button>
+      <div className="stash-control-area">
+        <Button onClick={onQueryStash} loading={queryBtnLoading}>
+          点我获取存档信息
+        </Button>
+        <Button onClick={switchMode} type="primary">
+          点我切换模式
+        </Button>
+      </div>
 
-      <p>当前模式: {StashModeMapper[mode]}</p>
-      {mode === "view" && <StashList list={stashList} />}
+      <div className="stash-mode-area">
+        <p>当前模式: {StashModeMapper[mode]}</p>
+      </div>
+      {mode === "view" && <ViewList list={stashList} />}
       {mode === "edit" && <EditableStashList list={stashList} />}
     </div>
   );
