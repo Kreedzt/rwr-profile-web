@@ -41,7 +41,7 @@ const Home: FC<RouteComponentProps> = ({ children }) => {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item onClick={onQuit}>退出登录</Menu.Item>
+                <Menu.Item key="quit" onClick={onQuit}>退出登录</Menu.Item>
               </Menu>
             }
           >
