@@ -8,6 +8,7 @@ import Register from "./pages/register/Register";
 import Stash from "./pages/stash/Stash";
 import XP from "./pages/xp/XP";
 import Group from "./pages/group/Group";
+import Admin from "./pages/admin/Admin";
 
 const App: FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: FC = () => {
           <Stash path="stash" />
           <XP path="xp" />
           <Group path="group" />
+          <Admin path="admin" />
         </Home>
       </Router>
     </div>

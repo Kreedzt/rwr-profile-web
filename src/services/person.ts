@@ -28,4 +28,13 @@ export const PersonService = {
       group_type: next,
     });
   },
+  insertAllPersonBackpack: async (data: StashItem[]) => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "POST",
+      `person/insert_all_person_backpack`,
+      data
+    )) as Promise<Person>;
+  },
 };

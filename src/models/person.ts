@@ -29,5 +29,6 @@ export interface Person {
     class: number;
   };
   item_list: PackageItem[];
+  backpack_item_list: StashItem[];
   stash_item_list: StashItem[];
 }

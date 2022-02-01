@@ -3,8 +3,8 @@ import DataAlert from "../../components/DataAleart/DataAlert";
 import { RouteComponentProps } from "@reach/router";
 import { Button, message, Modal, Select } from "antd";
 import { PersonService } from "../../services/person";
-import "./Group.css";
 import GroupReadme from "./GroupReadme";
+import "./Group.css";
 
 const groupTypeList: Array<{
   label: string;

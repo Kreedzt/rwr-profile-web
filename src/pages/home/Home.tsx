@@ -28,20 +28,32 @@ const Home: FC<RouteComponentProps> = ({ children }) => {
         <div className="left-wrapper">
           <div className="logo" />
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
-            {navRouters.map((item) => {
-              return (
-                <Menu.Item key={item.link}>
-                  <Link to={`${item.link}`}>{item.name}</Link>
-                </Menu.Item>
-              );
-            })}
+            {navRouters
+              .filter((item) => {
+                if (item.admin) {
+                  if (StorageService.getUserInfo()?.admin !== 1) {
+                    return false;
+                  }
+                }
+
+                return true;
+              })
+              .map((item) => {
+                return (
+                  <Menu.Item key={item.link}>
+                    <Link to={`${item.link}`}>{item.name}</Link>
+                  </Menu.Item>
+                );
+              })}
           </Menu>
         </div>
         <div className="avatar">
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item key="quit" onClick={onQuit}>退出登录</Menu.Item>
+                <Menu.Item key="quit" onClick={onQuit}>
+                  退出登录
+                </Menu.Item>
               </Menu>
             }
           >
