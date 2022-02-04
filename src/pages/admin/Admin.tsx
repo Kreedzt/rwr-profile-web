@@ -23,18 +23,20 @@ const Admin: FC<RouteComponentProps> = () => {
 
   return (
     <div className="admin">
-      {code_list.map((c) => {
-        const { label, ...stashInfo } = c;
-        return (
-          <Button
-            key={c.key}
-            loading={btnLoading}
-            onClick={() => updateAllPersonBackpack(stashInfo)}
-          >
-            {label}
-          </Button>
-        );
-      })}
+      <div className="quick-control-area">
+        {code_list.map((c) => {
+          const { label, ...stashInfo } = c;
+          return (
+            <Button
+              key={c.key}
+              loading={btnLoading}
+              onClick={() => updateAllPersonBackpack(stashInfo)}
+            >
+              {label}
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -7,6 +7,15 @@ export const PersonService = {
 
     return (await request("GET", `person/query/${user_id}`)) as Promise<Person>;
   },
+  updateBackpackList: async (data: StashItem[]) => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "POST",
+      `person/update_backpack/${user_id}`,
+      data
+    )) as Promise<Person>;
+  },
   updateStashList: async (data: StashItem[]) => {
     const user_id = await userIdPreCheck();
 

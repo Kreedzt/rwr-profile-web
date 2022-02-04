@@ -5,6 +5,11 @@ interface NavRouterItem {
 }
 export const navRouters: NavRouterItem[] = [
   {
+    link: 'backpack',
+    name: '背包管理',
+    admin: false
+  },
+  {
     link: "stash",
     name: "仓库管理",
     admin: false,
