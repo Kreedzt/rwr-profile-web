@@ -21,7 +21,7 @@ jobs:
       - name: Compress
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r dist.zip dist README.md LICENSE
+          args: zip -qq -r dist.zip dist/* README.md LICENSE
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
