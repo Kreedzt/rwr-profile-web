@@ -23,8 +23,9 @@ jobs:
         run: cp LICENSE dist && cp README.md dist
       - name: Compress
         uses: montudor/action-zip@v1
+        working-directory: dist
         with:
-          args: cd dist && zip -r -j ../dist.zip . && cd ..
+          args: zip -r -j ../dist.zip .
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
