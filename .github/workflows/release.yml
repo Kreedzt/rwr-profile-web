@@ -18,10 +18,12 @@ jobs:
         run: npm i -g pnpm && pnpm i
       - name: Build
         run: pnpm build
+      - name: Move
+        run: rm -rf temp/ && mkdir temp && cp -r dist/* temp && cp LICENSE temp && cp README.md temp
       - name: Compress
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r dist.zip dist/index.html dist/assets README.md LICENSE
+          args: zip -r -j dist.zip temp
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
