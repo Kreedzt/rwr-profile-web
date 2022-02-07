@@ -1,26 +1,74 @@
 import React, { FC, useCallback, useState } from "react";
-import { Button, message, Input, Modal } from "antd";
+import { Button, message, Input, Modal, Radio } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import { code_list } from "./code_list";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
+import PersonList, { usePersonListRef } from "./PersonList";
+
+enum ModeEnum {
+  ALL = 0,
+  LIST = 1,
+  CHECKED = 2,
+}
 
 const Admin: FC<RouteComponentProps> = () => {
   const [btnLoading, setBtnLoading] = useState(false);
+  const [mode, setMode] = useState<ModeEnum>(ModeEnum.ALL);
   const [code, setCode] = useState<string>();
+  const personListRef = usePersonListRef();
 
-  const updateAllPersonBackpack = useCallback(async (c: StashItem) => {
-    setBtnLoading(true);
+  const updateAllPersonBackpack = useCallback(
+    async (c: StashItem) => {
+      console.log("mode", mode);
 
-    try {
-      await PersonService.insertAllPersonBackpack([c]);
-      message.success(`发放 ${c.key} 成功`);
-    } catch (e) {
-      console.log(e);
-    }
+      setBtnLoading(true);
 
-    setBtnLoading(false);
-  }, []);
+      try {
+        switch (mode) {
+          case ModeEnum.ALL:
+            await PersonService.insertAllPersonBackpack([c]);
+            break;
+          case ModeEnum.LIST:
+            {
+              const profile_id_list =
+                personListRef.current
+                  ?.getDisplayList()
+                  .map((d) => d.profile_id) ?? [];
+              console.log(
+                "displayList: ",
+                personListRef.current?.getDisplayList()
+              );
+              await PersonService.insertSelectedPersonBackpackList(
+                profile_id_list,
+                [c]
+              );
+            }
+            break;
+          case ModeEnum.CHECKED:
+            {
+              const profile_id_list =
+                personListRef.current?.getCheckedList() ?? [];
+              console.log(
+                "checkedList: ",
+                personListRef.current?.getCheckedList()
+              );
+              await PersonService.insertSelectedPersonBackpackList(
+                profile_id_list,
+                [c]
+              );
+            }
+            break;
+        }
+        message.success(`发放 ${c.key} 成功`);
+      } catch (e) {
+        console.log(e);
+      }
+
+      setBtnLoading(false);
+    },
+    [mode]
+  );
 
   const onParseCode = useCallback(() => {
     if (!code) {
@@ -45,7 +93,41 @@ const Admin: FC<RouteComponentProps> = () => {
           ),
           onOk: async () => {
             try {
-              await PersonService.insertAllPersonBackpack([parsedItem]);
+              switch (mode) {
+                case ModeEnum.ALL:
+                  await PersonService.insertAllPersonBackpack([parsedItem]);
+                  break;
+                case ModeEnum.LIST:
+                  {
+                    const profile_id_list =
+                      personListRef.current
+                        ?.getDisplayList()
+                        .map((d) => d.profile_id) ?? [];
+                    console.log(
+                      "displayList: ",
+                      personListRef.current?.getDisplayList()
+                    );
+                    await PersonService.insertSelectedPersonBackpackList(
+                      profile_id_list,
+                      [parsedItem]
+                    );
+                  }
+                  break;
+                case ModeEnum.CHECKED:
+                  {
+                    const profile_id_list =
+                      personListRef.current?.getCheckedList() ?? [];
+                    console.log(
+                      "checkedList: ",
+                      personListRef.current?.getCheckedList()
+                    );
+                    await PersonService.insertSelectedPersonBackpackList(
+                      profile_id_list,
+                      [parsedItem]
+                    );
+                  }
+                  break;
+              }
               message.success(`发放 ${parsedItem.key} 成功`);
             } catch (e) {
               console.log(e);
@@ -64,7 +146,15 @@ const Admin: FC<RouteComponentProps> = () => {
   return (
     <div className="admin">
       <div className="global-server-command">
-        <p>全服发放</p>
+        <p>物品发放</p>
+
+        <div className="mode-switch">
+          <Radio.Group value={mode} onChange={(e) => setMode(e.target.value)}>
+            <Radio value={ModeEnum.ALL}>全服发放</Radio>
+            <Radio value={ModeEnum.LIST}>表格内数据发放</Radio>
+            <Radio value={ModeEnum.CHECKED}>勾选发放</Radio>
+          </Radio.Group>
+        </div>
 
         <div className="quick-control-area">
           <p>快捷操作区(快速添加一项物品)</p>
@@ -96,6 +186,10 @@ const Admin: FC<RouteComponentProps> = () => {
           />
           <Button onClick={onParseCode}>解析代码并添加</Button>
         </div>
+      </div>
+
+      <div className="person-list-area">
+        <PersonList ref={personListRef} />
       </div>
     </div>
   );
