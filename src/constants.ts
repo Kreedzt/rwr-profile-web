@@ -4,3 +4,4 @@ export const USER_ADMIN_KEY = 'admin';
 
 export const USER_ID_NOT_FOUND_MSG = '找不到用户信息';
 export const VERSION = '0.5.0';
+export const API_PREFIX = '/api';

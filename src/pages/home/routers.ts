@@ -5,9 +5,9 @@ interface NavRouterItem {
 }
 export const navRouters: NavRouterItem[] = [
   {
-    link: 'backpack',
-    name: '背包管理',
-    admin: false
+    link: "backpack",
+    name: "背包管理",
+    admin: false,
   },
   {
     link: "stash",
@@ -22,6 +22,11 @@ export const navRouters: NavRouterItem[] = [
   {
     link: "xp",
     name: "经验管理",
+    admin: false,
+  },
+  {
+    link: "archive",
+    name: "存档管理",
     admin: false,
   },
   {

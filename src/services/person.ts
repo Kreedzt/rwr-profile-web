@@ -1,17 +1,23 @@
 import { request, userIdPreCheck } from "./request";
 import { Person, StashItem } from "../models/person";
 import { Profile } from "../models/profile";
+import { API_PREFIX } from "../constants";
+
+const PERSON_API_PREFIX = "person";
 
 export const PersonService = {
   query: async () => {
     const user_id = await userIdPreCheck();
 
-    return (await request("GET", `person/query/${user_id}`)) as Promise<Person>;
+    return (await request(
+      "GET",
+      `${PERSON_API_PREFIX}/query/${user_id}`
+    )) as Promise<Person>;
   },
   queryAll: async () => {
     const user_id = await userIdPreCheck();
 
-    return (await request("GET", `person/query_all`)) as Promise<
+    return (await request("GET", `${PERSON_API_PREFIX}/query_all`)) as Promise<
       // 第一项为存档 ID, 第二项才是存档信息, 第三项为用户信息
       Array<[number, Person, Profile]>
     >;
@@ -21,7 +27,7 @@ export const PersonService = {
 
     return (await request(
       "POST",
-      `person/update_backpack/${user_id}`,
+      `${PERSON_API_PREFIX}/update_backpack/${user_id}`,
       data
     )) as Promise<Person>;
   },
@@ -41,7 +47,7 @@ export const PersonService = {
 
     return (await request(
       "POST",
-      `person/insert_selected_person_backpack`,
+      `${PERSON_API_PREFIX}/insert_selected_person_backpack`,
       enhancedData
     )) as Promise<void>;
   },
@@ -50,29 +56,48 @@ export const PersonService = {
 
     return (await request(
       "POST",
-      `person/update_stash/${user_id}`,
+      `${PERSON_API_PREFIX}/update_stash/${user_id}`,
       data
     )) as Promise<Person>;
   },
   resetXpTo5Stars: async () => {
     const user_id = await userIdPreCheck();
 
-    return await request("POST", `/person/reset_xp_5_stars/${user_id}`);
+    return await request(
+      "POST",
+      `${PERSON_API_PREFIX}/reset_xp_5_stars/${user_id}`
+    );
   },
   updateGroupData: async (next: string) => {
     const user_id = await userIdPreCheck();
 
-    return await request("POST", `/person/update_group_type/${user_id}`, {
-      group_type: next,
-    });
+    return await request(
+      "POST",
+      `${PERSON_API_PREFIX}/update_group_type/${user_id}`,
+      {
+        group_type: next,
+      }
+    );
   },
   insertAllPersonBackpack: async (data: StashItem[]) => {
     const user_id = await userIdPreCheck();
 
     return (await request(
       "POST",
-      `person/insert_all_person_backpack`,
+      `${PERSON_API_PREFIX}/insert_all_person_backpack`,
       data
     )) as Promise<Person>;
+  },
+  download: async () => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "GET",
+      `${PERSON_API_PREFIX}/download/${user_id}`
+    )) as Promise<Person>;
+  },
+  getDownloadUrl: async () => {
+    const user_id = await userIdPreCheck();
+    return `${API_PREFIX}/${PERSON_API_PREFIX}/download/${user_id}`;
   },
 };

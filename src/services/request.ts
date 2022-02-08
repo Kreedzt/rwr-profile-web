@@ -1,7 +1,7 @@
 import { ErrorResponse } from "../models/response";
 import { message } from "antd";
 import { StorageService } from "./storage";
-import { USER_ID_NOT_FOUND_MSG } from "../constants";
+import { API_PREFIX, USER_ID_NOT_FOUND_MSG } from "../constants";
 
 export const userIdPreCheck = async (): Promise<number> => {
   const user_id = StorageService.getUserInfo()?.user_id;
@@ -22,7 +22,7 @@ export const request = (
   params?: Record<string, any>
 ) => {
   console.log("request params", method, url, params);
-  return fetch(`/api/${url}`, {
+  return fetch(`${API_PREFIX}/${url}`, {
     method,
     headers: {
       "Content-type": "application/json; charset=UTF-8",

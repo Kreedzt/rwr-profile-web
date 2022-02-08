@@ -10,6 +10,7 @@ import XP from "./pages/xp/XP";
 import Group from "./pages/group/Group";
 import Admin from "./pages/admin/Admin";
 import Backpack from "./pages/backpack/Backpack";
+import Archive from './pages/archive/Archive';
 
 const App: FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: FC = () => {
           <Group path="group" />
           <Admin path="admin" />
           <Backpack path="backpack" />
+          <Archive path="archive" />
         </Home>
       </Router>
     </div>
