@@ -41,10 +41,10 @@ const Archive: FC<RouteComponentProps> = () => {
 
       <div className="archive-info">
         <Button loading={btnLoding} type="primary" onClick={onDownloadPerson}>
-          下载状态数据存档
+          下载状态数据存档(.person)
         </Button>
         <Button loading={btnLoding} onClick={onDownloadProfile}>
-          下载信息数据存档
+          下载信息数据存档(.profile)
         </Button>
       </div>
     </div>

@@ -16,6 +16,15 @@ export const userIdPreCheck = async (): Promise<number> => {
   return +user_id;
 };
 
+const responseHandler = (res: ErrorResponse | Record<string, any>) => {
+  console.log("fetch res", res);
+  if ("code" in res && res.code !== 0) {
+    message.error(`Server Error: ${res.message}`);
+    return Promise.reject(res);
+  }
+  return Promise.resolve(res);
+};
+
 export const request = (
   method: "GET" | "POST",
   url: string,
@@ -30,12 +39,19 @@ export const request = (
     body: params ? JSON.stringify(params) : null,
   })
     .then((r) => r.json())
-    .then((res: ErrorResponse | Record<string, any>) => {
-      console.log("fetch res", res);
-      if ("code" in res && res.code !== 0) {
-        message.error(`Server Error: ${res.message}`);
-        return Promise.reject(res);
-      }
-      return Promise.resolve(res);
-    });
+    .then(responseHandler);
+};
+
+export const uploadRequest = (url: string, params?: FormData) => {
+  console.log("uploadRequest params", url, params);
+
+  return fetch(`${API_PREFIX}/${url}`, {
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+    },
+    body: params
+  })
+    .then((r) => r.json())
+    .then(responseHandler);
 };
