@@ -1,9 +1,9 @@
-import { request, userIdPreCheck } from "./request";
+import { request, uploadRequest, userIdPreCheck } from "./request";
 import { Person, StashItem } from "../models/person";
 import { Profile } from "../models/profile";
 import { API_PREFIX } from "../constants";
 
-const PERSON_API_PREFIX = "person";
+export const PERSON_API_PREFIX = "person";
 
 export const PersonService = {
   query: async () => {
@@ -99,5 +99,18 @@ export const PersonService = {
   getDownloadUrl: async () => {
     const user_id = await userIdPreCheck();
     return `${API_PREFIX}/${PERSON_API_PREFIX}/download/${user_id}`;
+  },
+  upload: async (file: File) => {
+    const user_id = await userIdPreCheck();
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return await uploadRequest(`${PERSON_API_PREFIX}`, formData);
+  },
+  getUploadUrl: async () => {
+    const user_id = await userIdPreCheck();
+
+    return `${API_PREFIX}/${PERSON_API_PREFIX}/upload/${user_id}`;
   },
 };
