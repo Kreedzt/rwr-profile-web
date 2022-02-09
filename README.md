@@ -16,6 +16,8 @@
   server_data_folder_path: "temp/data",
   // 服务器日志目录
   server_log_folder_path: "temp/logs",
+  // 服务器上传存档临时目录，目标路径必须存在
+  "server_upload_temp_folder_path": "temp/upload_temp"
 }
 ```
 
