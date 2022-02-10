@@ -37,6 +37,10 @@
 }
 ```
 
+## 成品展示
+
+![预览图片](preview.png)
+
 ## 开发
 
 > 该项目依赖后端运行, 具体请参考后端的开发操作: https://github.com/Kreedzt/rwr-profile-server
