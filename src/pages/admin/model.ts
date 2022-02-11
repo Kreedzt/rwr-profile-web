@@ -1,5 +1,5 @@
 import { Person } from "../../models/person";
-import { Profile } from "../../models/profile";
+import { Profile, Stats } from "../../models/profile";
 
 export interface PersonListItem {
   profile_id: number;
@@ -7,4 +7,8 @@ export interface PersonListItem {
   xp: Person["authority"];
   rp: Person["job_points"];
   squad_tag: Profile["squad_tag"];
+  time_played: Stats["time_played"];
+  kills: Stats["kills"];
+  deaths: Stats["deaths"];
+  player_kills: Stats["player_kills"];
 }

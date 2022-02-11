@@ -17,58 +17,69 @@ const Admin: FC<RouteComponentProps> = () => {
   const [mode, setMode] = useState<ModeEnum>(ModeEnum.ALL);
   const [code, setCode] = useState<string>();
   const personListRef = usePersonListRef();
+  const [tempSendList, setTempSendList] = useState<StashItem[]>([]);
 
-  const updateAllPersonBackpack = useCallback(
-    async (c: StashItem) => {
-      console.log("mode", mode);
+  const insertTempItem = useCallback(async (c: StashItem) => {
+    setTempSendList((prev) => [...prev, c]);
+  }, []);
 
-      setBtnLoading(true);
-
-      try {
-        switch (mode) {
-          case ModeEnum.ALL:
-            await PersonService.insertAllPersonBackpack([c]);
-            break;
-          case ModeEnum.LIST:
-            {
-              const profile_id_list =
-                personListRef.current
-                  ?.getDisplayList()
-                  .map((d) => d.profile_id) ?? [];
-              console.log(
-                "displayList: ",
-                personListRef.current?.getDisplayList()
-              );
-              await PersonService.insertSelectedPersonBackpackList(
-                profile_id_list,
-                [c]
-              );
-            }
-            break;
-          case ModeEnum.CHECKED:
-            {
-              const profile_id_list =
-                personListRef.current?.getCheckedList() ?? [];
-              console.log(
-                "checkedList: ",
-                personListRef.current?.getCheckedList()
-              );
-              await PersonService.insertSelectedPersonBackpackList(
-                profile_id_list,
-                [c]
-              );
-            }
-            break;
+  const send = useCallback(() => {
+    Modal.confirm({
+      title: `准备发放, 发放模式: ${mode}`,
+      content: (
+        <div>
+          <p>物品总数: {tempSendList.length}</p>
+          <code>
+            <pre>{JSON.stringify(tempSendList)}</pre>
+          </code>
+        </div>
+      ),
+      onOk: async () => {
+        try {
+          switch (mode) {
+            case ModeEnum.ALL:
+              await PersonService.insertAllPersonBackpack(tempSendList);
+              break;
+            case ModeEnum.LIST:
+              {
+                const profile_id_list =
+                  personListRef.current
+                    ?.getDisplayList()
+                    .map((d) => d.profile_id) ?? [];
+                console.log(
+                  "displayList: ",
+                  personListRef.current?.getDisplayList()
+                );
+                await PersonService.insertSelectedPersonBackpackList(
+                  profile_id_list,
+                  tempSendList
+                );
+              }
+              break;
+            case ModeEnum.CHECKED:
+              {
+                const profile_id_list =
+                  personListRef.current?.getCheckedList() ?? [];
+                console.log(
+                  "checkedList: ",
+                  personListRef.current?.getCheckedList()
+                );
+                await PersonService.insertSelectedPersonBackpackList(
+                  profile_id_list,
+                  tempSendList
+                );
+              }
+              break;
+          }
+          message.success(`发放物品成功`);
+        } catch (e) {
+          console.log(e);
         }
-        message.success(`发放 ${c.key} 成功`);
-      } catch (e) {
-        console.log(e);
-      }
+      },
+    });
 
-      setBtnLoading(false);
-    },
-    [mode]
-  );
+    setBtnLoading(false);
+  }, [tempSendList, mode]);
 
   const onParseCode = useCallback(() => {
     if (!code) {
@@ -83,7 +94,7 @@ const Admin: FC<RouteComponentProps> = () => {
         "class" in parsedItem
       ) {
         Modal.confirm({
-          title: "准备发放如下内容",
+          title: "准备添加如下内容到待发放区",
           content: (
             <div>
               <p>key: {parsedItem.key}</p>
@@ -92,46 +103,7 @@ const Admin: FC<RouteComponentProps> = () => {
             </div>
           ),
           onOk: async () => {
-            try {
-              switch (mode) {
-                case ModeEnum.ALL:
-                  await PersonService.insertAllPersonBackpack([parsedItem]);
-                  break;
-                case ModeEnum.LIST:
-                  {
-                    const profile_id_list =
-                      personListRef.current
-                        ?.getDisplayList()
-                        .map((d) => d.profile_id) ?? [];
-                    console.log(
-                      "displayList: ",
-                      personListRef.current?.getDisplayList()
-                    );
-                    await PersonService.insertSelectedPersonBackpackList(
-                      profile_id_list,
-                      [parsedItem]
-                    );
-                  }
-                  break;
-                case ModeEnum.CHECKED:
-                  {
-                    const profile_id_list =
-                      personListRef.current?.getCheckedList() ?? [];
-                    console.log(
-                      "checkedList: ",
-                      personListRef.current?.getCheckedList()
-                    );
-                    await PersonService.insertSelectedPersonBackpackList(
-                      profile_id_list,
-                      [parsedItem]
-                    );
-                  }
-                  break;
-              }
-              message.success(`发放 ${parsedItem.key} 成功`);
-            } catch (e) {
-              console.log(e);
-            }
+            return insertTempItem(parsedItem);
           },
         });
       } else {
@@ -141,7 +113,7 @@ const Admin: FC<RouteComponentProps> = () => {
       message.error("代码内容不合法!");
       console.log("e", e);
     }
-  }, [code]);
+  }, [code, insertTempItem]);
 
   return (
     <div className="admin">
@@ -156,6 +128,16 @@ const Admin: FC<RouteComponentProps> = () => {
           </Radio.Group>
         </div>
 
+        <div className="ready-to-send-area">
+          <p>待发放区</p>
+          <Button type="primary" onClick={send}>
+            点我发放(待发放数量: {tempSendList.length})
+          </Button>
+          <Button danger onClick={() => setTempSendList([])}>
+            清空待发放列表
+          </Button>
+        </div>
+
         <div className="quick-control-area">
           <p>快捷操作区(快速添加一项物品)</p>
 
@@ -166,7 +148,7 @@ const Admin: FC<RouteComponentProps> = () => {
                 <Button
                   key={c.key}
                   loading={btnLoading}
-                  onClick={() => updateAllPersonBackpack(stashInfo)}
+                  onClick={() => insertTempItem(stashInfo)}
                 >
                   {label}
                 </Button>

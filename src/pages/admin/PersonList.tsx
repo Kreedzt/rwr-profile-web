@@ -48,6 +48,10 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         xp: info[1].authority,
         rp: info[1].job_points,
         squad_tag: info[2].squad_tag,
+        time_played: info[2].stats.time_played,
+        kills: info[2].stats.kills,
+        deaths: info[2].stats.deaths,
+        player_kills: info[2].stats.player_kills,
       }));
       setDataList(extractedRes);
       setDisplayList(extractedRes);
@@ -64,12 +68,14 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
 
   return (
     <div>
-      <Button loading={queryLoading} onClick={onQueryAll}>
-        查询全部
-      </Button>
-      <Button loading={queryLoading} onClick={onQuery5Stars}>
-        过滤出所有五星人形
-      </Button>
+      <div className="query-area">
+        <Button loading={queryLoading} onClick={onQueryAll}>
+          查询全部
+        </Button>
+        <Button loading={queryLoading} onClick={onQuery5Stars}>
+          过滤出所有五星人形
+        </Button>
+      </div>
       <Table
         rowSelection={{
           selectedRowKeys: selectedList,
