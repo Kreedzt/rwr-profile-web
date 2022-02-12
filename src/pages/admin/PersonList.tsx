@@ -11,6 +11,8 @@ import { Button, Table } from "antd";
 import { PersonService } from "../../services/person";
 import { PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
+import CustomQuery from "./CustomQuery";
+import { QueryItem } from "./type";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -66,15 +68,22 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList(dataList.filter((item) => item.xp > 10));
   }, [dataList]);
 
+  const onCustomQuery = useCallback((query: QueryItem[]) => {
+    console.log("queryItem", query);
+  }, []);
+
   return (
     <div>
-      <div className="query-area">
+      <div className="quick-query-area">
         <Button loading={queryLoading} onClick={onQueryAll}>
           查询全部
         </Button>
         <Button loading={queryLoading} onClick={onQuery5Stars}>
           过滤出所有五星人形
         </Button>
+      </div>
+      <div className="custom-query-area">
+        <CustomQuery onQuery={onCustomQuery} />
       </div>
       <Table
         rowSelection={{
