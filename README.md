@@ -4,7 +4,7 @@
 
 > 该项目依赖后端运行, 对应后端: https://github.com/Kreedzt/rwr-profile-server
 
-下载本项目[构建后代码](https://github.com/Kreedzt/rwr-profile-web/releases)，然后下载后端[构建后代码](https://github.com/Kreedzt/rwr-profile-server/releases)，配合 nginx 托管，并放置 `config.json` 文件和 `users.json` 文件，最后从命令行启动该项目即可
+下载本项目[构建后代码](https://github.com/Kreedzt/rwr-profile-web/releases)，然后下载后端[构建后代码](https://github.com/Kreedzt/rwr-profile-server/releases)，配合 nginx 托管，并放置 `config.json` 文件和 `users.json` 文件，最后启动后端及 nginx 即可
 
 `config.json`(需要与该项目同目录):
 
