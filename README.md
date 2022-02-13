@@ -11,11 +11,11 @@
 ```json5
 {
   // rwr 存档目录，建议使用相对路径
-  rwr_profile_folder_path: "temp/profiles",
+  "rwr_profile_folder_path": "temp/profiles",
   // 服务器数据目录，不能为空，路径必须存在 users.json
-  server_data_folder_path: "temp/data",
+  "server_data_folder_path": "temp/data",
   // 服务器日志目录
-  server_log_folder_path: "temp/logs",
+  "server_log_folder_path": "temp/logs",
   // 服务器上传存档临时目录，目标路径必须存在
   "server_upload_temp_folder_path": "temp/upload_temp"
 }
@@ -27,16 +27,16 @@
 
 ```json5
 {
-  user_list: [
+  "user_list": [
     {
       // 用户名
-      name: "AAA",
+      "name": "AAA",
       // 对应的存档用户 id
-      user_id: 1432226718,
+      "user_id": 1432226718,
       // 密码(编码后)
-      password: "YWFh",
+      "password": "YWFh",
       // 是否管理员标识
-      admin: 1,
+      "admin": 1,
     },
   ],
 }
