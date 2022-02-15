@@ -7,6 +7,7 @@ export interface PersonListItem {
   xp: Person["authority"];
   rp: Person["job_points"];
   squad_tag: Profile["squad_tag"];
+  sid: Profile['sid'];
   time_played: Stats["time_played"];
   kills: Stats["kills"];
   deaths: Stats["deaths"];

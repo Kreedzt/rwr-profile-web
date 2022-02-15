@@ -50,6 +50,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         xp: info[1].authority,
         rp: info[1].job_points,
         squad_tag: info[2].squad_tag,
+        sid: info[2].sid,
         time_played: info[2].stats.time_played,
         kills: info[2].stats.kills,
         deaths: info[2].stats.deaths,
@@ -68,6 +69,20 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList(dataList.filter((item) => item.xp > 10));
   }, [dataList]);
 
+  const onQueryUniqueBySid = useCallback(() => {
+    const tempSet = new Set<String>();
+    setDisplayList(
+      dataList.filter((item) => {
+        if (tempSet.has(item.sid)) {
+          return false;
+        }
+
+        tempSet.add(item.sid);
+        return true;
+      })
+    );
+  }, [dataList]);
+
   const onCustomQuery = useCallback((query: QueryItem[]) => {
     console.log("queryItem", query);
   }, []);
@@ -76,10 +91,13 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     <div>
       <div className="quick-query-area">
         <Button loading={queryLoading} onClick={onQueryAll}>
-          查询全部
+          查询全部(先点我查询)
         </Button>
         <Button loading={queryLoading} onClick={onQuery5Stars}>
           过滤出所有五星人形
+        </Button>
+        <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
+          按 Steam ID 唯一过滤
         </Button>
       </div>
       <div className="custom-query-area">
@@ -98,6 +116,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         dataSource={displayList}
         columns={PERSON_LIST_COLUMNS}
       />
+      当前表格内数据总数: {displayList.length}
     </div>
   );
 });

@@ -53,4 +53,9 @@ export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
     key: "squad_tag",
     title: "队伍名称",
   },
+  {
+    dataIndex: "sid",
+    key: "sid",
+    title: "Steam ID",
+  },
 ];
