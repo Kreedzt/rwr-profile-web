@@ -1,67 +1,68 @@
 import { ColumnType } from "antd/es/table";
 import { PersonListItem } from "./model";
+import { PersonListItemMapper } from "./mapper";
 
 export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
   {
     dataIndex: "profile_id",
     key: "profile_id",
-    title: "存档ID",
+    title: PersonListItemMapper["profile_id"],
   },
   {
     dataIndex: "username",
     key: "username",
-    title: "用户名",
+    title: PersonListItemMapper["username"],
   },
   {
     dataIndex: "xp",
     key: "xp",
-    title: "xp",
+    title: PersonListItemMapper["xp"],
     sorter: (a, b) => a.xp - b.xp,
   },
   {
     dataIndex: "rp",
     key: "rp",
-    title: "rp",
+    title: PersonListItemMapper["rp"],
     sorter: (a, b) => a.rp - b.rp,
   },
   {
     dataIndex: "time_played",
     key: "time_played",
-    title: "游玩时间",
+    title: PersonListItemMapper["time_played"],
     sorter: (a, b) => a.time_played - b.time_played,
   },
   {
     dataIndex: "kills",
     key: "kills",
-    title: "杀敌数",
+    title: PersonListItemMapper["kills"],
     sorter: (a, b) => a.kills - b.kills,
   },
   {
     dataIndex: "deaths",
     key: "deaths",
-    title: "死亡数",
+    title: PersonListItemMapper["deaths"],
     sorter: (a, b) => a.deaths - b.deaths,
   },
   {
     dataIndex: "player_kills",
     key: "player_kills",
-    title: "友军击杀数",
+    title: PersonListItemMapper["player_kills"],
     sorter: (a, b) => a.player_kills - b.player_kills,
   },
   {
     dataIndex: "squad_tag",
     key: "squad_tag",
-    title: "队伍名称",
+    title: PersonListItemMapper["squad_tag"],
   },
   {
     dataIndex: "sid",
     key: "sid",
-    title: "Steam ID",
+    title: PersonListItemMapper["sid"],
   },
   {
     dataIndex: "associated_count",
     key: "associated_count",
-    title: "关联用户名总数",
+    title: PersonListItemMapper["associated_count"],
     sorter: (a, b) => a.associated_count - b.associated_count,
   },
 ];

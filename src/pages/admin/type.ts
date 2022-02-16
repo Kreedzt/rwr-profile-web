@@ -1,3 +1,5 @@
+import { PersonListItem } from "./model";
+
 export enum QueryTypeEnum {
   GREATER = "gt",
   LESS = "lt",
@@ -7,8 +9,13 @@ export enum QueryTypeEnum {
 
 export interface QueryItem {
   id: string;
-  value: string;
+  value: any;
   label: string;
-  key: string;
+  key: keyof PersonListItem;
   type: QueryTypeEnum;
+}
+
+export enum QueryModeEnum {
+  ALL = 'all',
+  ONE = 'one'
 }

@@ -13,7 +13,8 @@ import { PersonService } from "../../services/person";
 import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
 import CustomQuery from "./CustomQuery";
-import { QueryItem } from "./type";
+import {QueryItem, QueryModeEnum} from "./type";
+import { parseQueryList } from "./parse";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -140,8 +141,18 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList(Array.from(allProfileIdMapRef.current.values()));
   }, []);
 
-  const onCustomQuery = useCallback((query: QueryItem[]) => {
-    console.log("queryItem", query);
+  const onCustomQuery = useCallback((query: QueryItem[], mode: QueryModeEnum) => {
+    const nextList: PersonListItem[] = [];
+
+    allProfileIdMapRef.current.forEach((info) => {
+      const isValid = parseQueryList(info, query, mode);
+
+      if (isValid) {
+        nextList.push(info);
+      }
+    });
+
+    setDisplayList(nextList);
   }, []);
 
   const onQueryAssociatedModal = useCallback((targetSid: string) => {
