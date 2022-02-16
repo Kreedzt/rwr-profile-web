@@ -58,4 +58,35 @@ export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
     key: "sid",
     title: "Steam ID",
   },
+  {
+    dataIndex: "associated_count",
+    key: "associated_count",
+    title: "关联用户名总数",
+    sorter: (a, b) => a.associated_count - b.associated_count,
+  },
 ];
+
+export const getLinkablePersonListColumns = (
+  onQueryAssociated: (sid: string) => void
+) => {
+  return PERSON_LIST_COLUMNS.map((c) => {
+    if (c.key === "associated_count") {
+      return {
+        ...c,
+        render: (value: number, record: PersonListItem, index: number) => {
+          return (
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                onQueryAssociated(record.sid);
+              }}
+            >
+              {value}
+            </a>
+          );
+        },
+      };
+    }
+    return c;
+  });
+};

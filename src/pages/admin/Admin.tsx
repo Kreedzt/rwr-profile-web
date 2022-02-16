@@ -97,6 +97,7 @@ const Admin: FC<RouteComponentProps> = () => {
           title: "准备添加如下内容到待发放区",
           content: (
             <div>
+              <p>此操作不可逆, 请谨慎操作</p>
               <p>key: {parsedItem.key}</p>
               <p>index: {parsedItem.index}</p>
               <p>class: {parsedItem.class}</p>

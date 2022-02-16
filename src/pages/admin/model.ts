@@ -12,4 +12,6 @@ export interface PersonListItem {
   kills: Stats["kills"];
   deaths: Stats["deaths"];
   player_kills: Stats["player_kills"];
+  // 关联用户名数量
+  associated_count: number;
 }

@@ -4,12 +4,13 @@ import React, {
   MutableRefObject,
   useCallback,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { Button, Table } from "antd";
+import { Button, Table, Modal } from "antd";
 import { PersonService } from "../../services/person";
-import { PERSON_LIST_COLUMNS } from "./columns";
+import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
 import CustomQuery from "./CustomQuery";
 import { QueryItem } from "./type";
@@ -29,6 +30,18 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const [selectedList, setSelectedList] = useState<
     PersonListItem["profile_id"][]
   >([]);
+  const [modalOpt, setModalOpt] = useState<{
+    visible: boolean;
+    personList: PersonListItem[];
+  }>({
+    visible: false,
+    personList: [],
+  });
+  /**
+     映射关系: [steamId, [profile_id]]
+   */
+  const steamIdMapRef = useRef<Map<string, number[]>>(new Map());
+  const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
 
   useImperativeHandle(
     ref,
@@ -44,18 +57,48 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     try {
       const personListRes = await PersonService.queryAll();
 
-      const extractedRes: PersonListItem[] = personListRes.map((info) => ({
-        profile_id: info[0],
-        username: info[2].username,
-        xp: info[1].authority,
-        rp: info[1].job_points,
-        squad_tag: info[2].squad_tag,
-        sid: info[2].sid,
-        time_played: info[2].stats.time_played,
-        kills: info[2].stats.kills,
-        deaths: info[2].stats.deaths,
-        player_kills: info[2].stats.player_kills,
-      }));
+      steamIdMapRef.current.clear();
+      allProfileIdMapRef.current.clear();
+
+      personListRes.forEach((info) => {
+        const resInfo: PersonListItem = {
+          profile_id: info[0],
+          username: info[2].username,
+          xp: info[1].authority,
+          rp: info[1].job_points,
+          squad_tag: info[2].squad_tag,
+          sid: info[2].sid,
+          time_played: info[2].stats.time_played,
+          kills: info[2].stats.kills,
+          deaths: info[2].stats.deaths,
+          player_kills: info[2].stats.player_kills,
+          associated_count: 1,
+        };
+
+        const steamIdMapValue = steamIdMapRef.current.get(resInfo.sid);
+
+        if (steamIdMapValue === undefined) {
+          steamIdMapRef.current.set(resInfo.sid, [resInfo.profile_id]);
+        } else {
+          steamIdMapRef.current.set(resInfo.sid, [
+            ...steamIdMapValue,
+            resInfo.profile_id,
+          ]);
+        }
+
+        allProfileIdMapRef.current.set(resInfo.profile_id, resInfo);
+      });
+
+      allProfileIdMapRef.current.forEach((info) => {
+        const steamIdMapValue = steamIdMapRef.current.get(info.sid);
+
+        info.associated_count = steamIdMapValue?.length ?? 1;
+      });
+
+      const extractedRes: PersonListItem[] = Array.from(
+        allProfileIdMapRef.current.values()
+      );
+
       setDataList(extractedRes);
       setDisplayList(extractedRes);
       console.log("personListRes", personListRes);
@@ -66,39 +109,76 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   }, []);
 
   const onQuery5Stars = useCallback(() => {
-    setDisplayList(dataList.filter((item) => item.xp > 10));
-  }, [dataList]);
+    setDisplayList(
+      Array.from(allProfileIdMapRef.current.values()).filter(
+        (item) => item.xp > 10
+      )
+    );
+  }, []);
 
   const onQueryUniqueBySid = useCallback(() => {
-    const tempSet = new Set<String>();
-    setDisplayList(
-      dataList.filter((item) => {
-        if (tempSet.has(item.sid)) {
-          return false;
-        }
+    /**
+       steamId 唯一, 大号优先
+     */
+    const tempMap = new Map<string, PersonListItem>();
 
-        tempSet.add(item.sid);
-        return true;
-      })
-    );
-  }, [dataList]);
+    allProfileIdMapRef.current.forEach((info) => {
+      const tempMapRes = tempMap.get(info.sid);
+
+      if (tempMapRes === undefined) {
+        tempMap.set(info.sid, info);
+        // 按游玩时间优先覆盖
+      } else if (info.time_played > tempMapRes.time_played) {
+        tempMap.set(info.sid, info);
+      }
+    });
+
+    setDisplayList(Array.from(tempMap.values()));
+  }, []);
 
   const onCustomQuery = useCallback((query: QueryItem[]) => {
     console.log("queryItem", query);
   }, []);
 
+  const onQueryAssociatedModal = useCallback((targetSid: string) => {
+    const profileIdList = steamIdMapRef.current.get(targetSid) ?? [];
+
+    const modalPersonList: PersonListItem[] = [];
+
+    profileIdList.forEach((id) => {
+      const personItem = allProfileIdMapRef.current.get(id);
+      if (!personItem) return;
+      modalPersonList.push(personItem);
+    });
+
+    setModalOpt({
+      visible: true,
+      personList: modalPersonList,
+    });
+  }, []);
+
+  const linkableColumns = useMemo(() => {
+    return getLinkablePersonListColumns(onQueryAssociatedModal);
+  }, [onQueryAssociatedModal]);
+
   return (
     <div>
       <div className="quick-query-area">
-        <Button loading={queryLoading} onClick={onQueryAll}>
-          查询全部(先点我查询)
-        </Button>
-        <Button loading={queryLoading} onClick={onQuery5Stars}>
-          过滤出所有五星人形
-        </Button>
-        <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
-          按 Steam ID 唯一过滤
-        </Button>
+        <div>
+          <p>查询区域</p>
+          <Button loading={queryLoading} type="primary" onClick={onQueryAll}>
+            查询全部(先点我查询)
+          </Button>
+        </div>
+        <div>
+          <p>二次筛选区域</p>
+          <Button loading={queryLoading} onClick={onQuery5Stars}>
+            过滤出所有五星人形
+          </Button>
+          <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
+            按 Steam ID 唯一过滤(游玩时间优先)
+          </Button>
+        </div>
       </div>
       <div className="custom-query-area">
         <CustomQuery onQuery={onCustomQuery} />
@@ -114,9 +194,32 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         loading={queryLoading}
         rowKey="profile_id"
         dataSource={displayList}
-        columns={PERSON_LIST_COLUMNS}
+        columns={linkableColumns}
       />
       当前表格内数据总数: {displayList.length}
+      <Modal
+        width="80vw"
+        style={{
+          overflow: "auto",
+        }}
+        visible={modalOpt.visible}
+        onCancel={() => {
+          setModalOpt({
+            visible: false,
+            personList: [],
+          });
+        }}
+        title="查询关联用户名"
+      >
+        <div>
+          <Table
+            rowKey="profile_id"
+            dataSource={modalOpt.personList}
+            columns={PERSON_LIST_COLUMNS}
+          />
+          当前表格内数据总数: {modalOpt.personList.length}
+        </div>
+      </Modal>
     </div>
   );
 });
