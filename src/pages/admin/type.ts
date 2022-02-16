@@ -1,6 +1,8 @@
 export enum QueryTypeEnum {
-  ASC = "asc",
-  DESC = "desc",
+  GREATER = "gt",
+  LESS = "lt",
+  EQUAL = "eq",
+  CONTAIN = "in",
 }
 
 export interface QueryItem {

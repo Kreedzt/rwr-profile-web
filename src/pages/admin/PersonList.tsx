@@ -136,6 +136,10 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList(Array.from(tempMap.values()));
   }, []);
 
+  const onClearQuery = useCallback(() => {
+    setDisplayList(Array.from(allProfileIdMapRef.current.values()));
+  }, []);
+
   const onCustomQuery = useCallback((query: QueryItem[]) => {
     console.log("queryItem", query);
   }, []);
@@ -169,9 +173,12 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           <Button loading={queryLoading} type="primary" onClick={onQueryAll}>
             查询全部(先点我查询)
           </Button>
+          <Button loading={queryLoading} danger onClick={onClearQuery}>
+            清空所有筛选
+          </Button>
         </div>
         <div>
-          <p>二次筛选区域</p>
+          <p>二次快捷筛选区域</p>
           <Button loading={queryLoading} onClick={onQuery5Stars}>
             过滤出所有五星人形
           </Button>

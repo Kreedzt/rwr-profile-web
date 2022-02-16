@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
 import QueryItemControl from "./QueryItemControl";
 import { QueryItem } from "./type";
+import { Button } from "antd";
 
 interface CustomQueryProps {
   onQuery: (q: QueryItem[]) => void;
@@ -23,6 +24,13 @@ const CustomQuery: FC<CustomQueryProps> = () => {
 
   return (
     <div>
+      <p>自定义查询区域</p>
+      <div>
+        <Button type="primary">执行自定义查询</Button>
+        <Button danger>重置自定义查询</Button>
+        <Button>+</Button>
+        <Button>-</Button>
+      </div>
       {queryList.map((q) => (
         <QueryItemControl key={q.id} record={q} onChange={onItemChange} />
       ))}
