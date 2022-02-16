@@ -210,6 +210,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           });
         }}
         title="查询关联用户名"
+        footer={null}
       >
         <div>
           <Table
