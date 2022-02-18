@@ -1,12 +1,16 @@
 import React, { FC, useCallback, useState } from "react";
 import QueryItemControl from "./QueryItemControl";
 import { QueryItem, QueryModeEnum, QueryTypeEnum } from "./type";
-import { Button, Select } from "antd";
+import { Button, Select, Typography } from "antd";
 import { PersonListItemMapper, QueryModeMapper } from "./mapper";
+import "./CustomQuery.less";
 
 interface CustomQueryProps {
   onQuery: (q: QueryItem[], mode: QueryModeEnum) => void;
+  loading: boolean;
 }
+
+const { Title } = Typography;
 
 const queryModeOptions: Array<{
   label: string;
@@ -18,7 +22,7 @@ const queryModeOptions: Array<{
   };
 });
 
-const CustomQuery: FC<CustomQueryProps> = ({ onQuery }) => {
+const CustomQuery: FC<CustomQueryProps> = ({ onQuery, loading }) => {
   const [queryList, setQueryList] = useState<QueryItem[]>([]);
   const [queryMode, setQueryMode] = useState<QueryModeEnum>(QueryModeEnum.ONE);
 
@@ -64,32 +68,34 @@ const CustomQuery: FC<CustomQueryProps> = ({ onQuery }) => {
   }, []);
 
   return (
-    <div>
-      <p>自定义查询区域</p>
-      <div>
-        <Button onClick={onCustomQuery} type="primary">
+    <div className="custom-query">
+      <Title level={5}>自定义查询区域(基于所有数据)</Title>
+      <div className="top-btn-control">
+        <Button loading={loading} onClick={onCustomQuery} type="primary">
           执行自定义查询
         </Button>
         <Button onClick={onClear} danger>
           清空自定义查询列表
         </Button>
-        <Button onClick={onAddItem}>+</Button>
-        <p>查询模式：</p>
+        <span>查询模式：</span>
         <Select
           placeholder="选择查询模式"
           value={queryMode}
           onChange={(e) => setQueryMode(e)}
           options={queryModeOptions}
         />
+        <Button onClick={onAddItem}>+ 添加查询项</Button>
       </div>
-      {queryList.map((q) => (
-        <QueryItemControl
-          key={q.id}
-          record={q}
-          onChange={onItemChange}
-          onRemove={onRemoveItem}
-        />
-      ))}
+      <div className="query-list">
+        {queryList.map((q) => (
+          <QueryItemControl
+            key={q.id}
+            record={q}
+            onChange={onItemChange}
+            onRemove={onRemoveItem}
+          />
+        ))}
+      </div>
     </div>
   );
 };

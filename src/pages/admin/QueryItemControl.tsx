@@ -38,7 +38,7 @@ const QueryItemControl: FC<QueryItemControlProps> = ({
 }) => {
   return (
     <div className="query-item-control">
-      <Button onClick={() => onRemove(record)}>-</Button>
+      <Button danger onClick={() => onRemove(record)}>- 移除此项</Button>
       <Select
         placeholder="选择查询目标"
         options={queryItemOptions}

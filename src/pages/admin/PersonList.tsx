@@ -8,18 +8,21 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Table, Modal } from "antd";
+import { Button, Table, Modal, Typography } from "antd";
 import { PersonService } from "../../services/person";
 import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
 import CustomQuery from "./CustomQuery";
-import {QueryItem, QueryModeEnum} from "./type";
+import { QueryItem, QueryModeEnum } from "./type";
 import { parseQueryList } from "./parse";
+import "./PersonList.less";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
   getCheckedList: () => number[];
 }
+
+const { Paragraph, Text, Title } = Typography;
 
 export const usePersonListRef = (): MutableRefObject<PersonListRef | null> =>
   useRef(null);
@@ -141,19 +144,22 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList(Array.from(allProfileIdMapRef.current.values()));
   }, []);
 
-  const onCustomQuery = useCallback((query: QueryItem[], mode: QueryModeEnum) => {
-    const nextList: PersonListItem[] = [];
+  const onCustomQuery = useCallback(
+    (query: QueryItem[], mode: QueryModeEnum) => {
+      const nextList: PersonListItem[] = [];
 
-    allProfileIdMapRef.current.forEach((info) => {
-      const isValid = parseQueryList(info, query, mode);
+      allProfileIdMapRef.current.forEach((info) => {
+        const isValid = parseQueryList(info, query, mode);
 
-      if (isValid) {
-        nextList.push(info);
-      }
-    });
+        if (isValid) {
+          nextList.push(info);
+        }
+      });
 
-    setDisplayList(nextList);
-  }, []);
+      setDisplayList(nextList);
+    },
+    []
+  );
 
   const onQueryAssociatedModal = useCallback((targetSid: string) => {
     const profileIdList = steamIdMapRef.current.get(targetSid) ?? [];
@@ -177,31 +183,36 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   }, [onQueryAssociatedModal]);
 
   return (
-    <div>
+    <div className="person-list">
       <div className="quick-query-area">
-        <div>
-          <p>查询区域</p>
-          <Button loading={queryLoading} type="primary" onClick={onQueryAll}>
-            查询全部(先点我查询)
-          </Button>
-          <Button loading={queryLoading} danger onClick={onClearQuery}>
-            清空所有筛选
-          </Button>
+        <div className="main-area">
+          <Title level={5}>查询区域</Title>
+          <div className="btn-list">
+            <Button loading={queryLoading} type="primary" onClick={onQueryAll}>
+              查询全部(先点我查询)
+            </Button>
+            <Button loading={queryLoading} danger onClick={onClearQuery}>
+              清空所有筛选
+            </Button>
+          </div>
         </div>
-        <div>
-          <p>二次快捷筛选区域</p>
-          <Button loading={queryLoading} onClick={onQuery5Stars}>
-            过滤出所有五星人形
-          </Button>
-          <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
-            按 Steam ID 唯一过滤(游玩时间优先)
-          </Button>
+        <div className="filter-area">
+          <Title level={5}>二次快捷筛选区域(基于所有数据)</Title>
+          <div className="btn-list">
+            <Button loading={queryLoading} onClick={onQuery5Stars}>
+              过滤出所有五星人形
+            </Button>
+            <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
+              按 Steam ID 唯一过滤(游玩时间优先)
+            </Button>
+          </div>
         </div>
       </div>
       <div className="custom-query-area">
-        <CustomQuery onQuery={onCustomQuery} />
+        <CustomQuery loading={queryLoading} onQuery={onCustomQuery} />
       </div>
       <Table
+        className="person-table"
         rowSelection={{
           selectedRowKeys: selectedList,
           onChange: (nextSelectedKeys) => {

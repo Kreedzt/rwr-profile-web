@@ -1,16 +1,19 @@
 import React, { FC, useCallback, useState } from "react";
-import { Button, message, Input, Modal, Radio } from "antd";
+import { Button, message, Input, Modal, Radio, Typography } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import { code_list } from "./code_list";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import PersonList, { usePersonListRef } from "./PersonList";
+import './Admin.less';
 
 enum ModeEnum {
   ALL = 0,
   LIST = 1,
   CHECKED = 2,
 }
+
+const { Title } = Typography;
 
 const Admin: FC<RouteComponentProps> = () => {
   const [btnLoading, setBtnLoading] = useState(false);
@@ -119,7 +122,7 @@ const Admin: FC<RouteComponentProps> = () => {
   return (
     <div className="admin">
       <div className="global-server-command">
-        <p>物品发放</p>
+        <Title level={4}>物品发放</Title>
 
         <div className="mode-switch">
           <Radio.Group value={mode} onChange={(e) => setMode(e.target.value)}>
@@ -130,7 +133,7 @@ const Admin: FC<RouteComponentProps> = () => {
         </div>
 
         <div className="ready-to-send-area">
-          <p>待发放区</p>
+          <Title level={5}>待发放区</Title>
           <Button type="primary" onClick={send}>
             点我发放(待发放数量: {tempSendList.length})
           </Button>
@@ -140,7 +143,7 @@ const Admin: FC<RouteComponentProps> = () => {
         </div>
 
         <div className="quick-control-area">
-          <p>快捷操作区(快速添加一项物品)</p>
+          <Title level={5}>快捷操作区(快速添加一项物品)</Title>
 
           <div className="quick-btn-list">
             {code_list.map((c) => {
@@ -159,7 +162,7 @@ const Admin: FC<RouteComponentProps> = () => {
         </div>
 
         <div className="code-paste-area">
-          <p>代码粘贴区</p>
+          <Title level={5}>代码粘贴区</Title>
 
           <Input.TextArea
             className="code-paste-input"
