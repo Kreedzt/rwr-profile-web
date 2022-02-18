@@ -3,7 +3,7 @@ import { Button, Input, List, message, Modal } from "antd";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import { code_list } from "./code";
-import "./EditableList.css";
+import "./EditableList.less";
 
 interface StashListProps {
   list: StashItem[];

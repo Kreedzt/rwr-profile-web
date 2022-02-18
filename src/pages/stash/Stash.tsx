@@ -6,7 +6,7 @@ import ViewList from "./ViewList";
 import { StashItem } from "../../models/person";
 import EditableStashList from "./EditableList";
 import DataAlert from "../../components/DataAleart/DataAlert";
-import "./Stash.css";
+import "./Stash.less";
 
 type StashMode = "view" | "edit";
 

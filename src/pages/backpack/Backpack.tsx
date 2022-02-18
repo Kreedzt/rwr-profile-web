@@ -5,8 +5,8 @@ import { PersonService } from "../../services/person";
 import ViewList from "./ViewList";
 import { StashItem } from "../../models/person";
 import DataAlert from "../../components/DataAleart/DataAlert";
-import "./Backpack.css";
 import EditableBackpackList from "./EditableList";
+import "./Backpack.less";
 
 type BackpackMode = "view" | "edit";
 

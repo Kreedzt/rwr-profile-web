@@ -3,7 +3,7 @@ import { Button, message, Modal } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import DataAlert from "../../components/DataAleart/DataAlert";
 import { PersonService } from "../../services/person";
-import "./XP.css";
+import "./XP.less";
 
 const XP: FC<RouteComponentProps> = () => {
   const [xp, setXp] = useState<number>();

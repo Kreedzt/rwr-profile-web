@@ -6,7 +6,7 @@ import { LoginReq } from "../../models/user";
 import { UserService } from "../../services/user";
 import { StorageService } from "../../services/storage";
 import { VERSION } from "../../constants";
-import "./Login.css";
+import "./Login.less";
 
 const { Title, Text } = Typography;
 

@@ -4,7 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 import { Button, message, Modal, Select } from "antd";
 import { PersonService } from "../../services/person";
 import GroupReadme from "./GroupReadme";
-import "./Group.css";
+import "./Group.less";
 
 const groupTypeList: Array<{
   label: string;

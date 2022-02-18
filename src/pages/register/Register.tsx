@@ -4,8 +4,8 @@ import { LoginReq, RegisterReq } from "../../models/user";
 import { useForm } from "antd/es/form/Form";
 import { Link, RouteComponentProps, useNavigate } from "@reach/router";
 import { UserService } from "../../services/user";
-import "./Register.css";
 import { VERSION } from "../../constants";
+import "./Register.less";
 
 const { Title } = Typography;
 

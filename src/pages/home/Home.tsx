@@ -8,7 +8,7 @@ import {
   VERSION,
 } from "../../constants";
 import { StorageService } from "../../services/storage";
-import "./Home.css";
+import "./Home.less";
 
 const { Header, Content, Footer } = Layout;
 

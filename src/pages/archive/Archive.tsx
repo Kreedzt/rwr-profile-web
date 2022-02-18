@@ -6,7 +6,7 @@ import { PersonService } from "../../services/person";
 import { ProfileService } from "../../services/profile";
 import { UploadChangeParam } from "antd/es/upload";
 import { StorageService } from "../../services/storage";
-import "./Archive.css";
+import "./Archive.less";
 
 const Archive: FC<RouteComponentProps> = () => {
   const [btnLoading, setBtnLoading] = useState(false);

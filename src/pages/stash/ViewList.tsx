@@ -2,7 +2,7 @@ import React, { FC, useCallback } from "react";
 import { Button, List, message, Table } from "antd";
 import Clipboard from "react-clipboard.js";
 import { StashItem } from "../../models/person";
-import './ViewList.css';
+import './ViewList.less';
 
 interface StashListProps {
   list: StashItem[];

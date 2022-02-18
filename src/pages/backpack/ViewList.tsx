@@ -2,7 +2,7 @@ import React, { FC, useCallback } from "react";
 import { Button, List, message, Table } from "antd";
 import Clipboard from "react-clipboard.js";
 import { StashItem } from "../../models/person";
-import './ViewList.css';
+import "./ViewList.less";
 
 interface StashListProps {
   list: StashItem[];
@@ -23,7 +23,10 @@ const ViewList: FC<StashListProps> = ({ list }) => {
           return (
             <List.Item key={`${item.key}-${index}`}>
               {item.key} / {item.index} / {item.class}
-              <Clipboard component="a" data-clipboard-text={JSON.stringify(item)}>
+              <Clipboard
+                component="a"
+                data-clipboard-text={JSON.stringify(item)}
+              >
                 <Button onClick={onCopy}>复制代码(用于分享)</Button>
               </Clipboard>
             </List.Item>
