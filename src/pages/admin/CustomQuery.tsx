@@ -69,7 +69,7 @@ const CustomQuery: FC<CustomQueryProps> = ({ onQuery, loading }) => {
 
   return (
     <div className="custom-query">
-      <Title level={5}>自定义查询区域(基于所有数据)</Title>
+      <Title level={5}>自定义查询区域(基于表格内数据)</Title>
       <div className="top-btn-control">
         <Button loading={loading} onClick={onCustomQuery} type="primary">
           执行自定义查询

@@ -146,17 +146,11 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
 
   const onCustomQuery = useCallback(
     (query: QueryItem[], mode: QueryModeEnum) => {
-      const nextList: PersonListItem[] = [];
-
-      allProfileIdMapRef.current.forEach((info) => {
-        const isValid = parseQueryList(info, query, mode);
-
-        if (isValid) {
-          nextList.push(info);
-        }
+      setDisplayList((prev) => {
+        return prev.filter((info) => {
+          return parseQueryList(info, query, mode);
+        });
       });
-
-      setDisplayList(nextList);
     },
     []
   );
