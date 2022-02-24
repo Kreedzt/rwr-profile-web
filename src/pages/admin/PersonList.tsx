@@ -15,8 +15,8 @@ import { PersonListItem } from "./model";
 import CustomQuery from "./CustomQuery";
 import { QueryItem, QueryModeEnum } from "./type";
 import { parseQueryList } from "./parse";
-import "./PersonList.less";
 import CodeQuery from "./CodeQuery";
+import "./PersonList.less";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];

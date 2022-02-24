@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { Button, message, Modal, Typography, Input } from "antd";
 import { PersonListItem } from "./model";
 import "./CodeQuery.less";
@@ -12,7 +12,11 @@ type CodeQueryProps = {
 };
 
 const INITIAL_CODE = `return function(info) {
+  // 默认不过滤, 查询全部
   return true;
+  
+  // 查询只有一个关联用户名的玩家
+  // return info.associated_count === 1;
 }`;
 
 const MOCK_DATA: PersonListItem = {
@@ -32,15 +36,36 @@ const MOCK_DATA: PersonListItem = {
 const CodeQuery: FC<CodeQueryProps> = ({ loading, onQuery }) => {
   const [codeText, setCodeText] = useState<string>(INITIAL_CODE);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const codeRecordRef = useRef(INITIAL_CODE);
 
-  const onCodeQuery = useCallback(() => {
+  const onSave = useCallback(() => {
     try {
       const filterFn = new Function(codeText)();
       // 执行测试
       filterFn(MOCK_DATA);
+      setModalVisible(false);
+    } catch (e: any) {
+      message.error(`代码不合法: ${e.message}`);
+      console.dir(e);
+    }
+  }, [codeText]);
+
+  const onCancel = useCallback(() => {
+    setCodeText(codeRecordRef.current);
+    setModalVisible(false);
+  }, []);
+
+  const onOpenModal = useCallback(() => {
+    codeRecordRef.current = codeText;
+    setModalVisible(true);
+  }, [codeText]);
+
+  const onCodeQuery = useCallback(() => {
+    try {
+      const filterFn = new Function(codeText)();
       onQuery(filterFn);
-    } catch (e) {
-      message.error(`代码不合法！`);
+    } catch (e: any) {
+      message.error(`代码不合法: ${e.message}`);
       console.dir(e);
     }
   }, [onQuery, codeText]);
@@ -56,7 +81,7 @@ const CodeQuery: FC<CodeQueryProps> = ({ loading, onQuery }) => {
         <Button type="primary" loading={loading} onClick={onCodeQuery}>
           执行自定义代码查询(JavaScript)
         </Button>
-        <Button onClick={() => setModalVisible(true)}>编辑自定义代码</Button>
+        <Button onClick={onOpenModal}>编辑自定义代码</Button>
         <Button onClick={onReset} danger>
           重置代码
         </Button>
@@ -64,10 +89,10 @@ const CodeQuery: FC<CodeQueryProps> = ({ loading, onQuery }) => {
       <Modal
         title="编辑自定义查询代码"
         visible={modalVisible}
-        footer={null}
-        onCancel={() => setModalVisible(false)}
+        onOk={onSave}
+        onCancel={onCancel}
       >
-        <div>
+        <div className="code-query-edit-modal">
           <div className="desc">
             参数 info 的结构说明:
             <p>
