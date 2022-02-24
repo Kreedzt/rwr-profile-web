@@ -81,13 +81,13 @@ const CodeQuery: FC<CodeQueryProps> = ({ loading, onQuery }) => {
         <Button type="primary" loading={loading} onClick={onCodeQuery}>
           执行自定义代码查询(JavaScript)
         </Button>
-        <Button onClick={onOpenModal}>编辑自定义代码</Button>
+        <Button onClick={onOpenModal}>编辑自定义代码(JavaScript)</Button>
         <Button onClick={onReset} danger>
           重置代码
         </Button>
       </div>
       <Modal
-        title="编辑自定义查询代码"
+        title="编辑自定义查询代码(JavaScript)"
         visible={modalVisible}
         onOk={onSave}
         onCancel={onCancel}
