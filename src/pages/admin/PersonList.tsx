@@ -16,6 +16,7 @@ import CustomQuery from "./CustomQuery";
 import { QueryItem, QueryModeEnum } from "./type";
 import { parseQueryList } from "./parse";
 import "./PersonList.less";
+import CodeQuery from "./CodeQuery";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -155,6 +156,17 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     []
   );
 
+  const onCodeQuery = useCallback(
+    (filterFn: (info: PersonListItem) => boolean) => {
+      setDisplayList((prev) => {
+        return prev.filter((info) => {
+          return filterFn(info);
+        });
+      });
+    },
+    []
+  );
+
   const onQueryAssociatedModal = useCallback((targetSid: string) => {
     const profileIdList = steamIdMapRef.current.get(targetSid) ?? [];
 
@@ -204,6 +216,9 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
       </div>
       <div className="custom-query-area">
         <CustomQuery loading={queryLoading} onQuery={onCustomQuery} />
+      </div>
+      <div className="code-query-area">
+        <CodeQuery loading={queryLoading} onQuery={onCodeQuery} />
       </div>
       <Table
         className="person-table"
