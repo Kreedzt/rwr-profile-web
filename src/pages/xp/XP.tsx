@@ -13,31 +13,31 @@ interface XPBtnItem {
 const CUSTOM_XP_ITEM: XPBtnItem[] = [
   {
     label: "6星人形",
-    value: 20.0,
+    value: 100.0,
   },
   {
     label: "1月人形",
-    value: 30.0,
+    value: 200.0,
   },
   {
     label: "2月人形",
-    value: 40.0,
+    value: 300.0,
   },
   {
     label: "3月人形",
-    value: 40.0,
+    value: 400.0,
   },
   {
     label: "4月人形",
-    value: 50.0,
+    value: 500.0,
   },
   {
     label: "5月人形",
-    value: 75.0,
+    value: 750.0,
   },
   {
     label: "1日人形",
-    value: 100.0,
+    value: 1000.0,
   },
 ];
 
