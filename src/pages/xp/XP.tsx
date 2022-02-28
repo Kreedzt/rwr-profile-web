@@ -5,6 +5,42 @@ import DataAlert from "../../components/DataAleart/DataAlert";
 import { PersonService } from "../../services/person";
 import "./XP.less";
 
+interface XPBtnItem {
+  label: string;
+  value: number;
+}
+
+const CUSTOM_XP_ITEM: XPBtnItem[] = [
+  {
+    label: "6星人形",
+    value: 20.0,
+  },
+  {
+    label: "1月人形",
+    value: 30.0,
+  },
+  {
+    label: "2月人形",
+    value: 40.0,
+  },
+  {
+    label: "3月人形",
+    value: 40.0,
+  },
+  {
+    label: "4月人形",
+    value: 50.0,
+  },
+  {
+    label: "5月人形",
+    value: 75.0,
+  },
+  {
+    label: "1日人形",
+    value: 100.0,
+  },
+];
+
 const XP: FC<RouteComponentProps> = () => {
   const [xp, setXp] = useState<number>();
   const [queryBtnLoading, setQueryBtnLoading] = useState(false);
@@ -37,6 +73,21 @@ const XP: FC<RouteComponentProps> = () => {
     });
   }, []);
 
+  const onCustomReset = useCallback(async (x: XPBtnItem) => {
+    Modal.confirm({
+      title: `确认重置XP为${x.label}吗`,
+      content: "此操作不可逆,请谨慎操作",
+      onOk: async () => {
+        try {
+          await PersonService.resetXpCustom(x.value);
+          message.success("操作成功");
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    });
+  }, []);
+
   return (
     <div className="xp">
       <DataAlert />
@@ -51,6 +102,11 @@ const XP: FC<RouteComponentProps> = () => {
         <Button type="primary" onClick={onResetTo5Stars}>
           重置为5星人形
         </Button>
+        {CUSTOM_XP_ITEM.map((x) => (
+          <Button key={x.label} onClick={() => onCustomReset(x)}>
+            重置为{x.label}
+          </Button>
+        ))}
       </div>
     </div>
   );

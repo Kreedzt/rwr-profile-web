@@ -68,6 +68,13 @@ export const PersonService = {
       `${PERSON_API_PREFIX}/reset_xp_5_stars/${user_id}`
     );
   },
+  resetXpCustom: async (xp: number) => {
+    const user_id = await userIdPreCheck();
+
+    return await request("POST", `${PERSON_API_PREFIX}/reset_xp/${user_id}`, {
+      authority: xp,
+    });
+  },
   updateGroupData: async (next: string) => {
     const user_id = await userIdPreCheck();
 
