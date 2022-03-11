@@ -119,6 +119,12 @@ pnpm build
   - 提供全服及指定玩家发放物品功能
   - 提供存档信息查询功能
 
+## 其他项目
+
+- [RWR GFL 存档数据可视化](https://github.com/Kreedzt/rwr-profile-visualization)
+- [RWR GFL 存档管理服务](https://github.com/Kreedzt/rwr-profile-server)
+- [RWR GFL 存档数据查询](https://github.com/Kreedzt/rwr-profile-stats)
+
 ## 协议
 
 - [GPLv3](https://opensource.org/licenses/GPL-3.0)
