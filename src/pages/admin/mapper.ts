@@ -7,7 +7,7 @@ export const PersonListItemMapper: Record<keyof PersonListItem, string> = {
   xp: "XP",
   rp: "RP",
   squad_tag: "小队名称",
-  sid: "Steam ID",
+  sid: "sid",
   time_played: "游玩时间",
   kills: "击杀数",
   deaths: "死亡数",

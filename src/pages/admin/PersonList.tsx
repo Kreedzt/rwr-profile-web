@@ -43,9 +43,9 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     personList: [],
   });
   /**
-     映射关系: [steamId, [profile_id]]
+     映射关系: [sid, [profile_id]]
    */
-  const steamIdMapRef = useRef<Map<string, number[]>>(new Map());
+  const sidMapRef = useRef<Map<string, number[]>>(new Map());
   const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
 
   useImperativeHandle(
@@ -62,7 +62,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     try {
       const personListRes = await PersonService.queryAll();
 
-      steamIdMapRef.current.clear();
+      sidMapRef.current.clear();
       allProfileIdMapRef.current.clear();
 
       personListRes.forEach((info) => {
@@ -80,13 +80,13 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           associated_count: 1,
         };
 
-        const steamIdMapValue = steamIdMapRef.current.get(resInfo.sid);
+        const sidMapValue = sidMapRef.current.get(resInfo.sid);
 
-        if (steamIdMapValue === undefined) {
-          steamIdMapRef.current.set(resInfo.sid, [resInfo.profile_id]);
+        if (sidMapValue === undefined) {
+          sidMapRef.current.set(resInfo.sid, [resInfo.profile_id]);
         } else {
-          steamIdMapRef.current.set(resInfo.sid, [
-            ...steamIdMapValue,
+          sidMapRef.current.set(resInfo.sid, [
+            ...sidMapValue,
             resInfo.profile_id,
           ]);
         }
@@ -95,9 +95,9 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
       });
 
       allProfileIdMapRef.current.forEach((info) => {
-        const steamIdMapValue = steamIdMapRef.current.get(info.sid);
+        const sidMapValue = sidMapRef.current.get(info.sid);
 
-        info.associated_count = steamIdMapValue?.length ?? 1;
+        info.associated_count = sidMapValue?.length ?? 1;
       });
 
       const extractedRes: PersonListItem[] = Array.from(
@@ -123,7 +123,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
 
   const onQueryUniqueBySid = useCallback(() => {
     /**
-       steamId 唯一, 大号优先
+     *  sid 唯一, 大号优先
      */
     const tempMap = new Map<string, PersonListItem>();
 
@@ -168,7 +168,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   );
 
   const onQueryAssociatedModal = useCallback((targetSid: string) => {
-    const profileIdList = steamIdMapRef.current.get(targetSid) ?? [];
+    const profileIdList = sidMapRef.current.get(targetSid) ?? [];
 
     const modalPersonList: PersonListItem[] = [];
 
@@ -209,7 +209,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
               过滤出所有五星人形
             </Button>
             <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
-              按 Steam ID 唯一过滤(游玩时间优先)
+              按 sid 唯一过滤(游玩时间优先)
             </Button>
           </div>
         </div>

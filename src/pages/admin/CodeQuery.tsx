@@ -106,7 +106,7 @@ const CodeQuery: FC<CodeQueryProps> = ({ loading, onQuery }) => {
               <p>xp: number; // XP</p>
               <p>rp: number; // RP</p>
               <p>squad_tag: string; // 小队名称</p>
-              <p>sid: string; // Steam ID</p>
+              <p>sid: string; // sid</p>
               <p>time_played: number; // 游玩时间</p>
               <p>kills: number; // 击杀数</p>
               <p>deaths: number; // 死亡数</p>
