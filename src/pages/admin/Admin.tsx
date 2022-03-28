@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useState } from "react";
-import { Button, message, Input, Modal, Radio, Typography } from "antd";
+import { Button, message, Input, Modal, Radio, Typography, Tabs } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import { code_list } from "./code_list";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import PersonList, { usePersonListRef } from "./PersonList";
-import './Admin.less';
+import "./Admin.less";
 
 enum ModeEnum {
   ALL = 0,
@@ -14,6 +14,7 @@ enum ModeEnum {
 }
 
 const { Title } = Typography;
+const { TabPane } = Tabs;
 
 const Admin: FC<RouteComponentProps> = () => {
   const [btnLoading, setBtnLoading] = useState(false);
@@ -122,56 +123,68 @@ const Admin: FC<RouteComponentProps> = () => {
   return (
     <div className="admin">
       <div className="global-server-command">
-        <Title level={4}>物品发放</Title>
-
         <div className="mode-switch">
           <Radio.Group value={mode} onChange={(e) => setMode(e.target.value)}>
-            <Radio value={ModeEnum.ALL}>全服发放</Radio>
-            <Radio value={ModeEnum.LIST}>表格内数据发放</Radio>
-            <Radio value={ModeEnum.CHECKED}>勾选发放</Radio>
+            <Radio value={ModeEnum.ALL}>全服操作</Radio>
+            <Radio value={ModeEnum.LIST}>表格内数据操作</Radio>
+            <Radio value={ModeEnum.CHECKED}>勾选操作</Radio>
           </Radio.Group>
         </div>
 
-        <div className="ready-to-send-area">
-          <Title level={5}>待发放区</Title>
-          <Button type="primary" onClick={send}>
-            点我发放(待发放数量: {tempSendList.length})
-          </Button>
-          <Button danger onClick={() => setTempSendList([])}>
-            清空待发放列表
-          </Button>
-        </div>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="物品发放" key="1">
+            <div>
+              <Title level={4}>物品发放</Title>
 
-        <div className="quick-control-area">
-          <Title level={5}>快捷操作区(快速添加一项物品)</Title>
-
-          <div className="quick-btn-list">
-            {code_list.map((c) => {
-              const { label, ...stashInfo } = c;
-              return (
-                <Button
-                  key={c.key}
-                  loading={btnLoading}
-                  onClick={() => insertTempItem(stashInfo)}
-                >
-                  {label}
+              <div className="ready-to-send-area">
+                <Title level={5}>待发放区</Title>
+                <Button type="primary" onClick={send}>
+                  点我发放(待发放数量: {tempSendList.length})
                 </Button>
-              );
-            })}
-          </div>
-        </div>
+                <Button danger onClick={() => setTempSendList([])}>
+                  清空待发放列表
+                </Button>
+              </div>
 
-        <div className="code-paste-area">
-          <Title level={5}>代码粘贴区</Title>
+              <div className="quick-control-area">
+                <Title level={5}>快捷操作区(快速添加一项物品)</Title>
 
-          <Input.TextArea
-            className="code-paste-input"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder={"代码粘贴到此处"}
-          />
-          <Button onClick={onParseCode}>解析代码并添加</Button>
-        </div>
+                <div className="quick-btn-list">
+                  {code_list.map((c) => {
+                    const { label, ...stashInfo } = c;
+                    return (
+                      <Button
+                        key={c.key}
+                        loading={btnLoading}
+                        onClick={() => insertTempItem(stashInfo)}
+                      >
+                        {label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="code-paste-area">
+                <Title level={5}>代码粘贴区</Title>
+
+                <Input.TextArea
+                  className="code-paste-input"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder={"代码粘贴到此处"}
+                />
+                <Button onClick={onParseCode}>解析代码并添加</Button>
+              </div>
+            </div>
+          </TabPane>
+
+          <TabPane tab="改造管理" key="2">
+            <div>
+              <Title level={4}>改造处理</Title>
+            </div>
+          </TabPane>
+        </Tabs>
       </div>
 
       <div className="person-list-area">
