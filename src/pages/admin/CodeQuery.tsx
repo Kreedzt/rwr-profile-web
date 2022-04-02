@@ -30,6 +30,7 @@ const MOCK_DATA: PersonListItem = {
   kills: 0,
   deaths: 0,
   player_kills: 0,
+  soldier_group: 'default',
   associated_count: 0,
 };
 
