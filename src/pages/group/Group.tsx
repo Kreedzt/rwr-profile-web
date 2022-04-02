@@ -67,7 +67,7 @@ const Group: FC<RouteComponentProps> = () => {
       content: `即将改造为:${nextGroupData}`,
       onOk: async () => {
         try {
-          await PersonService.updateGroupData(nextGroupData);
+          await PersonService.updateSoliderGroup(nextGroupData);
           message.success("操作成功");
         } catch (e) {
           console.log(e);

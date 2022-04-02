@@ -11,6 +11,7 @@ export interface PersonListItem {
   time_played: Stats["time_played"];
   kills: Stats["kills"];
   deaths: Stats["deaths"];
+  soldier_group: string;
   player_kills: Stats["player_kills"];
   // 关联用户名数量
   associated_count: number;

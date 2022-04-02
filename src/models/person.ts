@@ -6,7 +6,7 @@ export interface PackageItem {
 }
 
 export interface StashItem {
-  class: number,
+  class: number;
   index: number;
   key: string;
 }
@@ -31,4 +31,8 @@ export interface Person {
   item_list: PackageItem[];
   backpack_item_list: StashItem[];
   stash_item_list: StashItem[];
+}
+
+export interface SoliderGroupRes {
+  error_profile_list: number[];
 }

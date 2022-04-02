@@ -44,10 +44,9 @@ export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
     sorter: (a, b) => a.deaths - b.deaths,
   },
   {
-    dataIndex: "player_kills",
-    key: "player_kills",
-    title: PersonListItemMapper["player_kills"],
-    sorter: (a, b) => a.player_kills - b.player_kills,
+    dataIndex: "soldier_group",
+    key: "soldier_group",
+    title: PersonListItemMapper["soldier_group"],
   },
   {
     dataIndex: "squad_tag",

@@ -77,6 +77,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           kills: info[2].stats.kills,
           deaths: info[2].stats.deaths,
           player_kills: info[2].stats.player_kills,
+          soldier_group: info[1].soldier_group_name,
           associated_count: 1,
         };
 

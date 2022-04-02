@@ -1,5 +1,5 @@
 import { request, uploadRequest, userIdPreCheck } from "./request";
-import { Person, StashItem } from "../models/person";
+import { Person, SoliderGroupRes, StashItem } from "../models/person";
 import { Profile } from "../models/profile";
 import { API_PREFIX } from "../constants";
 
@@ -31,7 +31,7 @@ export const PersonService = {
       data
     )) as Promise<Person>;
   },
-  insertSelectedPersonBackpackList: async (
+  batchInsertPersonBackpackList: async (
     profile_id_list: number[],
     backpack_item_list: StashItem[]
   ) => {
@@ -75,7 +75,7 @@ export const PersonService = {
       authority: xp,
     });
   },
-  updateGroupData: async (next: string) => {
+  updateSoliderGroup: async (next: string) => {
     const user_id = await userIdPreCheck();
 
     return await request(
@@ -85,6 +85,41 @@ export const PersonService = {
         group_type: next,
       }
     );
+  },
+  batchUpdateSoldierGroup: async (
+    profile_id_list: number[],
+    data: {
+      group: string;
+      cost: number;
+    }
+  ) => {
+    await userIdPreCheck();
+
+    const enhancedData = {
+      profile_id_list,
+      group: data.group,
+      cost: data.cost,
+    };
+
+    return (await request(
+      "POST",
+      `${PERSON_API_PREFIX}/update_selected_person_soldier_group`,
+      enhancedData
+    )) as Promise<SoliderGroupRes>;
+  },
+  updateAllSoldierGroup: async (data: { group: string; cost: number }) => {
+    await userIdPreCheck();
+
+    const enhancedData = {
+      group: data.group,
+      cost: data.cost,
+    };
+
+    return (await request(
+      "POST",
+      `${PERSON_API_PREFIX}/update_all_person_soldier_group`,
+      enhancedData
+    )) as Promise<SoliderGroupRes>;
   },
   insertAllPersonBackpack: async (data: StashItem[]) => {
     const user_id = await userIdPreCheck();

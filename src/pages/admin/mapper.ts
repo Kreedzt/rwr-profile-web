@@ -12,6 +12,7 @@ export const PersonListItemMapper: Record<keyof PersonListItem, string> = {
   kills: "击杀数",
   deaths: "死亡数",
   player_kills: "玩家击杀数",
+  soldier_group: '兵种',
   associated_count: "关联用户数量",
 };
 
