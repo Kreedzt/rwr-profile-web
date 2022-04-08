@@ -6,6 +6,12 @@ export const code_list: Array<
   }
 > = [
   {
+    label: "作战报告书",
+    key: "gi_battle_report.carry_item",
+    class: 3,
+    index: 75,
+  },
+  {
     label: "CB1",
     key: "gift_box_community_1.carry_item",
     class: 3,
