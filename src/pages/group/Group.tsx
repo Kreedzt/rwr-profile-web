@@ -11,12 +11,16 @@ const groupTypeList: Array<{
   value: string;
 }> = [
   {
+    label: "无改造",
+    value: "default",
+  },
+  {
     label: "TEL",
     value: "TEL",
   },
   {
-    label: "无改造",
-    value: "default",
+    label: "TEL2",
+    value: "TEL2",
   },
   {
     label: "SCT",
@@ -27,6 +31,10 @@ const groupTypeList: Array<{
     value: "SCT2",
   },
   {
+    label: "SCT3",
+    value: "SCT3",
+  },
+  {
     label: "GST",
     value: "GST",
   },
@@ -35,12 +43,36 @@ const groupTypeList: Array<{
     value: "GST2",
   },
   {
+    label: "GST3",
+    value: "GST3",
+  },
+  {
     label: "HVY",
     value: "HVY",
   },
   {
     label: "HVY2",
     value: "HVY2",
+  },
+  {
+    label: "HVY3",
+    value: "HVY3",
+  },
+  {
+    label: "MED",
+    value: "MED",
+  },
+  {
+    label: "PZC",
+    value: "PZC",
+  },
+  {
+    label: "ERC",
+    value: "ERC",
+  },
+  {
+    label: "ENG",
+    value: "ENG",
   },
 ];
 
