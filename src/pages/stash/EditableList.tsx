@@ -7,9 +7,10 @@ import "./EditableList.less";
 
 interface StashListProps {
   list: StashItem[];
+  stashCapacity: number;
 }
 
-const EditableStashList: FC<StashListProps> = ({ list }) => {
+const EditableStashList: FC<StashListProps> = ({ list, stashCapacity }) => {
   const [realList, setRealList] = useState<StashItem[]>(list);
   const [code, setCode] = useState<string>();
 
@@ -71,7 +72,7 @@ const EditableStashList: FC<StashListProps> = ({ list }) => {
   }, []);
 
   const onSave = useCallback(async () => {
-    if (realList.length > 300) {
+    if (realList.length > stashCapacity) {
       message.error("仓库总数已超过上限");
       return;
     }
@@ -87,17 +88,17 @@ const EditableStashList: FC<StashListProps> = ({ list }) => {
         }
       },
     });
-  }, [realList]);
+  }, [realList, stashCapacity]);
 
   return (
     <div className="stash-comp editable-list">
       <div className="count-area">
         <p>
           当前总数:&nbsp;
-          <span className={realList.length > 300 ? "error" : "normal"}>
+          <span className={realList.length > stashCapacity ? "error" : "normal"}>
             {realList.length}
           </span>
-          /300
+          /{stashCapacity}
         </p>
       </div>
 

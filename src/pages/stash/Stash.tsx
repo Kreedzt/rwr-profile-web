@@ -18,6 +18,7 @@ const StashModeMapper: Record<StashMode, string> = {
 const Stash: FC<RouteComponentProps> = () => {
   const [queryBtnLoading, setQueryBtnLoading] = useState(false);
   const [stashList, setStashList] = useState<StashItem[]>([]);
+  const [stashCapacity, setStashCapacity] = useState<number>(300);
   const [mode, setMode] = useState<StashMode>("view");
 
   const onQueryStash = useCallback(async () => {
@@ -25,6 +26,7 @@ const Stash: FC<RouteComponentProps> = () => {
     try {
       const res = await PersonService.query();
       setStashList(res.stash_item_list);
+      setStashCapacity(res.stash_hard_capacity);
       console.log("res", res);
     } catch (e) {
       console.log(e);
@@ -54,7 +56,7 @@ const Stash: FC<RouteComponentProps> = () => {
         <p>当前模式: {StashModeMapper[mode]}</p>
       </div>
       {mode === "view" && <ViewList list={stashList} />}
-      {mode === "edit" && <EditableStashList list={stashList} />}
+      {mode === "edit" && <EditableStashList list={stashList} stashCapacity={stashCapacity} />}
     </div>
   );
 };

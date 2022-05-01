@@ -18,6 +18,7 @@ const BackpackModeMapper: Record<BackpackMode, string> = {
 const Backpack: FC<RouteComponentProps> = () => {
   const [queryBtnLoading, setQueryBtnLoading] = useState(false);
   const [backpackList, setBackpackList] = useState<StashItem[]>([]);
+  const [backpackCapacity, setBackpackCapacity] = useState<number>(255);
   const [mode, setMode] = useState<BackpackMode>("view");
 
   const onQueryStash = useCallback(async () => {
@@ -25,6 +26,7 @@ const Backpack: FC<RouteComponentProps> = () => {
     try {
       const res = await PersonService.query();
       setBackpackList(res.backpack_item_list);
+      setBackpackCapacity(res.backpack_hard_capacity);
       console.log("res", res);
     } catch (e) {
       console.log(e);
@@ -54,7 +56,7 @@ const Backpack: FC<RouteComponentProps> = () => {
         <p>当前模式: {BackpackModeMapper[mode]}</p>
       </div>
       {mode === "view" && <ViewList list={backpackList} />}
-      {mode === "edit" && <EditableBackpackList list={backpackList} />}
+      {mode === "edit" && <EditableBackpackList backpackCapacity={backpackCapacity} list={backpackList} />}
     </div>
   );
 };

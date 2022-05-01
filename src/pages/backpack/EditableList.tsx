@@ -7,9 +7,10 @@ import "./EditableList.less";
 
 interface BackpackListProps {
   list: StashItem[];
+  backpackCapacity: number;
 }
 
-const EditableBackpackList: FC<BackpackListProps> = ({ list }) => {
+const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity }) => {
   const [realList, setRealList] = useState<StashItem[]>(list);
   const [code, setCode] = useState<string>();
 
@@ -71,7 +72,7 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list }) => {
   }, []);
 
   const onSave = useCallback(async () => {
-    if (realList.length > 255) {
+    if (realList.length > backpackCapacity) {
       message.error("背包总数已超过上限");
       return;
     }
@@ -87,17 +88,17 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list }) => {
         }
       },
     });
-  }, [realList]);
+  }, [realList, backpackCapacity]);
 
   return (
     <div className="backpack-comp editable-list">
       <div className="count-area">
         <p>
           当前总数:&nbsp;
-          <span className={realList.length > 255 ? "error" : "normal"}>
+          <span className={realList.length > backpackCapacity ? "error" : "normal"}>
             {realList.length}
           </span>
-          /255
+          /{backpackCapacity}
         </p>
       </div>
 

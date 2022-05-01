@@ -28,6 +28,10 @@ export interface Person {
     target: string;
     class: number;
   };
+  // 1.92 新增: 背包容量
+  backpack_hard_capacity: number;
+  // 1.92 新增: 仓库容量
+  stash_hard_capacity: number;
   item_list: PackageItem[];
   backpack_item_list: StashItem[];
   stash_item_list: StashItem[];
