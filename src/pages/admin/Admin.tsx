@@ -14,6 +14,7 @@ import { code_list } from "./code_list";
 import { StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import PersonList, { usePersonListRef } from "./PersonList";
+import { ProfileService } from "../../services/profile";
 import "./Admin.less";
 
 enum ModeEnum {
@@ -45,19 +46,85 @@ const Admin: FC<RouteComponentProps> = () => {
   const [groupName, setGroupName] = useState<string>();
   const [groupCost, setGroupCost] = useState<number>(0);
 
+  // 小队标签
+  const [squadTagName, setSquadTagName] = useState<string>();
+
   const insertTempItem = useCallback(async (c: StashItem) => {
     setTempSendList((prev) => [...prev, c]);
   }, []);
 
+  const onParseCode = useCallback(() => {
+    if (!code) {
+      message.error("代码内容为空!");
+      return;
+    }
+    try {
+      const parsedItem = JSON.parse(code) as StashItem;
+      if (
+        "key" in parsedItem &&
+        "index" in parsedItem &&
+        "class" in parsedItem
+      ) {
+        Modal.confirm({
+          title: "准备添加如下内容到待发放区",
+          content: (
+            <div>
+              <p>此操作不可逆, 请谨慎操作</p>
+              <p>key: {parsedItem.key}</p>
+              <p>index: {parsedItem.index}</p>
+              <p>class: {parsedItem.class}</p>
+            </div>
+          ),
+          onOk: async () => {
+            return insertTempItem(parsedItem);
+          },
+        });
+      } else {
+        message.error("代码不合法!");
+      }
+    } catch (e) {
+      message.error("代码内容不合法!");
+      console.log("e", e);
+    }
+  }, [code, insertTempItem]);
+
   const onSubmitSend = useCallback(() => {
+    const prettierMap = new Map<string, number>();
+    tempSendList.forEach((t) => {
+      const prettierItemCount = prettierMap.get(t.key);
+      if (prettierItemCount !== undefined) {
+        prettierMap.set(t.key, prettierItemCount + 1);
+      } else {
+        prettierMap.set(t.key, 1);
+      }
+    });
+
+    const prettierList: Array<{
+      label: string;
+      count: number;
+    }> = [];
+    prettierMap.forEach((v, k) => {
+      prettierList.push({
+        label: k,
+        count: v,
+      });
+    });
+
     Modal.confirm({
       title: `准备发放, 发放模式: ${ModeTextMapper[mode]}`,
       content: (
         <div>
           <p>物品总数: {tempSendList.length}</p>
+          <p>物品代码列表:</p>
           <code>
             <pre>{JSON.stringify(tempSendList)}</pre>
           </code>
+          <p>物品优化展示列表(物品key: 数量):</p>
+          {prettierList.map((prettierItem) => (
+            <p key={prettierItem.label}>
+              {prettierItem.label}: {prettierItem.count}
+            </p>
+          ))}
         </div>
       ),
       onOk: async () => {
@@ -104,41 +171,6 @@ const Admin: FC<RouteComponentProps> = () => {
       },
     });
   }, [tempSendList, mode]);
-
-  const onParseCode = useCallback(() => {
-    if (!code) {
-      message.error("代码内容为空!");
-      return;
-    }
-    try {
-      const parsedItem = JSON.parse(code) as StashItem;
-      if (
-        "key" in parsedItem &&
-        "index" in parsedItem &&
-        "class" in parsedItem
-      ) {
-        Modal.confirm({
-          title: "准备添加如下内容到待发放区",
-          content: (
-            <div>
-              <p>此操作不可逆, 请谨慎操作</p>
-              <p>key: {parsedItem.key}</p>
-              <p>index: {parsedItem.index}</p>
-              <p>class: {parsedItem.class}</p>
-            </div>
-          ),
-          onOk: async () => {
-            return insertTempItem(parsedItem);
-          },
-        });
-      } else {
-        message.error("代码不合法!");
-      }
-    } catch (e) {
-      message.error("代码内容不合法!");
-      console.log("e", e);
-    }
-  }, [code, insertTempItem]);
 
   const onSubmitSoliderGroup = useCallback(() => {
     Modal.confirm({
@@ -243,6 +275,50 @@ const Admin: FC<RouteComponentProps> = () => {
     });
   }, [mode, groupName, groupCost]);
 
+  const onSubmitSquadTag = useCallback(() => {
+    Modal.confirm({
+      title: `准备写入小队标签, 写入模式: ${ModeTextMapper[mode]}`,
+      content: (
+        <div>
+          <p>更换小队标签为: {squadTagName}</p>
+        </div>
+      ),
+      onOk: async () => {
+        try {
+          switch (mode) {
+            case ModeEnum.ALL:
+              await ProfileService.updateAllSquadTag(squadTagName ?? "");
+              break;
+            case ModeEnum.LIST: {
+              const profile_id_list =
+                personListRef.current
+                  ?.getDisplayList()
+                  .map((d) => d.profile_id) ?? [];
+
+              await ProfileService.updateSelectedPersonSquadTag(
+                profile_id_list,
+                squadTagName ?? ""
+              );
+              break;
+            }
+            case ModeEnum.CHECKED: {
+              const profile_id_list =
+                personListRef.current?.getCheckedList() ?? [];
+
+              await ProfileService.updateSelectedPersonSquadTag(
+                profile_id_list,
+                squadTagName ?? ""
+              );
+              break;
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    });
+  }, [mode, squadTagName]);
+
   return (
     <div className="admin">
       <div className="global-server-command">
@@ -329,6 +405,29 @@ const Admin: FC<RouteComponentProps> = () => {
                   onClick={onSubmitSoliderGroup}
                 >
                   批量改造
+                </Button>
+              </div>
+            </div>
+          </TabPane>
+
+          <TabPane tab="小队管理(开发中)" key="3">
+            <div>
+              <Title level={4}>小队管理</Title>
+
+              <div className="ready-to-modify-squad-tag-area">
+                <Title level={5}>
+                  更换小队标签为:
+                  <div>
+                    <Input
+                      value={squadTagName}
+                      placeholder="输入小队标签"
+                      onChange={(e) => setSquadTagName(e.target.value)}
+                    />
+                  </div>
+                </Title>
+
+                <Button type="primary" onClick={onSubmitSquadTag}>
+                  批量设置小队标签
                 </Button>
               </div>
             </div>

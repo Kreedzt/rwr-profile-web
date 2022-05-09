@@ -1,5 +1,5 @@
 import { API_PREFIX } from "../constants";
-import { uploadRequest, userIdPreCheck } from "./request";
+import { request, uploadRequest, userIdPreCheck } from "./request";
 
 export const PROFILE_API_PREFIX = "profile";
 
@@ -20,5 +20,32 @@ export const ProfileService = {
     const user_id = await userIdPreCheck();
 
     return `${API_PREFIX}/${PROFILE_API_PREFIX}/upload/${user_id}`;
+  },
+  updateAllSquadTag: async (st: string) => {
+    await userIdPreCheck();
+
+    const enhancedData = {
+      squad_tag: st,
+    };
+
+    return await request(
+      "POST",
+      `${PROFILE_API_PREFIX}/update_all_profile_squad_tag`,
+      enhancedData
+    );
+  },
+  updateSelectedPersonSquadTag: async (pidList: number[], st: string) => {
+    await userIdPreCheck();
+
+    const enhancedData = {
+      profile_id_list: pidList,
+      squad_tag: st,
+    };
+
+    return await request(
+      "POST",
+      `${PROFILE_API_PREFIX}/update_selected_profile_squad_tag`,
+      enhancedData
+    );
   },
 };
