@@ -1,5 +1,6 @@
 import { PersonListItem } from "./model";
 import { QueryModeEnum, QueryTypeEnum } from "./type";
+import {ModeEnum} from "./enum";
 
 export const PersonListItemMapper: Record<keyof PersonListItem, string> = {
   profile_id: "存档ID",
@@ -26,4 +27,10 @@ export const QueryTypeMapper: Record<QueryTypeEnum, string> = {
 export const QueryModeMapper: Record<QueryModeEnum, string> = {
   [QueryModeEnum.ALL]: "全部条件满足",
   [QueryModeEnum.ONE]: "满足其一即可",
+};
+
+export const ModeTextMapper: Record<ModeEnum, string> = {
+  [ModeEnum.ALL]: "全服操作",
+  [ModeEnum.LIST]: "表格内数据操作",
+  [ModeEnum.CHECKED]: "勾选操作",
 };
