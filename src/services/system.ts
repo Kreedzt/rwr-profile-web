@@ -1,0 +1,24 @@
+import { QuickItem } from "../models/system";
+import { request, userIdPreCheck } from "./request";
+
+export const SYSTEM_API_PREFIX = "system";
+
+export const SystemService = {
+  query: async () => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "GET",
+      `${SYSTEM_API_PREFIX}/query_quick_items`
+    )) as Promise<QuickItem[]>;
+  },
+  update: async (params: QuickItem[]) => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "POST",
+      `${SYSTEM_API_PREFIX}/update_quick_items`,
+      params
+    )) as Promise<any>;
+  },
+};

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { message, Modal, Typography, Button, Input } from "antd";
 import { StashItem } from "../../../../models/person";
 import { ModeEnum } from "../../enum";
@@ -6,6 +6,8 @@ import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
 import { ModeTextMapper } from "../../mapper";
 import { code_list } from "../../code_list";
+import { SystemService } from "../../../../services/system";
+import { QuickItem } from "../../../../models/system";
 
 type ItemSendProps = {
   onGetMode: () => ModeEnum;
@@ -23,6 +25,7 @@ const ItemSend: FC<ItemSendProps> = ({
   // 物品发放
   const [tempSendList, setTempSendList] = useState<StashItem[]>([]);
   const [code, setCode] = useState<string>();
+  const [quickItemList, setQuickItemList] = useState<QuickItem[]>([]);
 
   const insertTempItem = useCallback(async (c: StashItem) => {
     setTempSendList((prev) => [...prev, c]);
@@ -62,6 +65,17 @@ const ItemSend: FC<ItemSendProps> = ({
       console.log("e", e);
     }
   }, [code, insertTempItem]);
+
+  const onRefreshQuickItemsList = useCallback(async () => {
+    try {
+      const res = await SystemService.query();
+      setQuickItemList(res);
+      //
+    } catch (e) {
+        /* message.error() */
+      console.dir(e);
+    }
+  }, []);
 
   const onSubmitSend = useCallback(() => {
     const prettierMap = new Map<string, number>();
@@ -144,6 +158,10 @@ const ItemSend: FC<ItemSendProps> = ({
     });
   }, [tempSendList, onGetMode, onGetCheckedList, onGetDisplayList]);
 
+  useEffect(() => {
+    onRefreshQuickItemsList();
+  }, []);
+
   return (
     <div>
       <Title level={4}>物品发放</Title>
@@ -162,7 +180,7 @@ const ItemSend: FC<ItemSendProps> = ({
         <Title level={5}>快捷操作区(快速添加一项物品)</Title>
 
         <div className="quick-btn-list">
-          {code_list.map((c) => {
+          {quickItemList.map((c) => {
             const { label, ...stashInfo } = c;
             return (
               <Button key={c.key} onClick={() => insertTempItem(stashInfo)}>
