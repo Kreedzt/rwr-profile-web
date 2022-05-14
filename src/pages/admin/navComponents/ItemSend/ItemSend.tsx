@@ -5,7 +5,6 @@ import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
 import { ModeTextMapper } from "../../mapper";
-import { code_list } from "../../code_list";
 import { SystemService } from "../../../../services/system";
 import { QuickItem } from "../../../../models/system";
 

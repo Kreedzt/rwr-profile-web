@@ -130,6 +130,29 @@ export const PersonService = {
       data
     )) as Promise<Person>;
   },
+  deleteAllItemList: async (data: string[]) => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "POST",
+      `${PERSON_API_PREFIX}/delete_item_list`,
+      data
+    )) as Promise<void>;
+  },
+  batchDeleteItemList: async (profileIdList: number[], itemList: string[]) => {
+    const user_id = await userIdPreCheck();
+
+    const data = {
+      profile_id_list: profileIdList,
+      item_list: itemList,
+    };
+
+    return (await request(
+      "POST",
+      `${PERSON_API_PREFIX}/delete_selected_person_item_list`,
+      data
+    )) as Promise<void>;
+  },
   download: async () => {
     const user_id = await userIdPreCheck();
 
