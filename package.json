@@ -1,6 +1,6 @@
 {
   "name": "rwr-profile-web",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
