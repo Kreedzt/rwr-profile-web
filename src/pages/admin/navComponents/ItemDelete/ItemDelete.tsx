@@ -47,16 +47,14 @@ const ItemDelete: FC<ItemSendProps> = ({
     const mode = onGetMode();
     const modeText = ModeTextMapper[mode];
 
-      Modal.confirm({
+    Modal.confirm({
       title: `准备删除, 操作模式: ${modeText}`,
       content: (
         <div>
           <p>物品总数: {tempDeleteList.length}</p>
           <p>物品代码列表:</p>
           {tempDeleteList.map((k) => (
-            <p key={k}>
-              {k}
-            </p>
+            <p key={k}>{k}</p>
           ))}
         </div>
       ),
@@ -95,66 +93,65 @@ const ItemDelete: FC<ItemSendProps> = ({
         } catch (e) {
           console.log(e);
         }
-          },
-      });
+      },
+    });
+  }, [tempDeleteList, onGetMode, onGetCheckedList, onGetDisplayList]);
 
-  }, [onGetMode, onGetCheckedList, onGetDisplayList]);
+  return (
+    <div className="item-delete-container">
+      <Title level={4}>物品删除</Title>
 
-    return (
-        <div className="item-delete-container">
-            <Title level={4}>物品删除</Title>
+      <Alert
+        message="警告"
+        description="物品删除是一项极具风险的行为, 建议处理前备份存档"
+        type="warning"
+        showIcon
+      />
 
-            <Alert
-                message="警告"
-                description="物品删除是一项极具风险的行为, 建议处理前备份存档"
-                type="warning"
-                showIcon
-            />
+      <div className="ready-to-delete-area">
+        <Title level={5}>待删除的 key 列表</Title>
+      </div>
 
-            <div className="ready-to-delete-area">
-                <Title level={5}>待删除的 key 列表</Title>
-            </div>
+      <List
+        className="delete-item-list"
+        dataSource={tempDeleteList}
+        bordered
+        renderItem={(k) => (
+          <List.Item
+            key={k}
+            actions={[
+              <span onClick={() => onRemoveItem(k)}>
+                <DeleteOutlined />
+              </span>,
+            ]}
+          >
+            {k}
+          </List.Item>
+        )}
+      />
 
-            <List
-                className="delete-item-list"
-                dataSource={tempDeleteList}
-                bordered
-                renderItem={(k) => (
-                    <List.Item
-                        key={k}
-                        actions={[
-                            <span onClick={() => onRemoveItem(k)}>
-                                <DeleteOutlined />
-                            </span>,
-                        ]}
-                    >
-                        {k}
-                    </List.Item>
-                )}
-            />
+      <div className="insert-area">
+        <Input
+          value={inputVal}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="输入物品Key"
+          suffix={
+            <span>
+              <Button type="default" onClick={onAddItem}>
+                + 添加到列表
+              </Button>
+            </span>
+          }
+        />
 
-            <div className="insert-area">
-                <Input
-                    value={inputVal}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="输入物品Key"
-                    suffix={
-                        <span>
-                            <Button type="default" onClick={onAddItem}>
-                                + 添加到列表
-                            </Button>
-                        </span>
-                    }
-                />
-
-                <div>
-                    <Button onClick={onSubmit} type="primary" danger>
-                        执行删除操作
-                    </Button>
-                </div>
-            </div>
+        <div>
+          <Button onClick={onSubmit} type="primary" danger>
+            执行删除操作
+          </Button>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default ItemDelete;
