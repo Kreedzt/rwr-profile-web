@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC } from "react";
 import { Button, Input, Select } from "antd";
 import { QueryItem } from "./type";

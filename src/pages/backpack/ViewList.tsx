@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback } from "react";
 import { Button, List, message, Table } from "antd";
 import Clipboard from "react-clipboard.js";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { ErrorResponse } from "../models/response";
 import { message } from "antd";
 import { StorageService } from "./storage";

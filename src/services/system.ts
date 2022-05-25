@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { QuickItem } from "../models/system";
 import { request, userIdPreCheck } from "./request";
 

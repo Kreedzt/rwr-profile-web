@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { request, uploadRequest, userIdPreCheck } from "./request";
 import { Person, SoliderGroupRes, StashItem } from "../models/person";
 import { Profile } from "../models/profile";
