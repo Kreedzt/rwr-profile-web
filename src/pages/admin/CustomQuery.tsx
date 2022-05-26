@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
 import QueryItemControl from "./QueryItemControl";
 import { QueryItem, QueryModeEnum, QueryTypeEnum } from "./type";

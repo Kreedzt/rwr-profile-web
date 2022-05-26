@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
 import { Button, Input, message, Modal, Typography, InputNumber } from "antd";
 import { ModeTextMapper } from "../../mapper";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { API_PREFIX } from "../constants";
 import { request, uploadRequest, userIdPreCheck } from "./request";
 

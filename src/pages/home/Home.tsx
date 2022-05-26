@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback } from "react";
 import { RouteComponentProps, Link, useNavigate } from "@reach/router";
 import { Dropdown, Layout, Menu } from "antd";

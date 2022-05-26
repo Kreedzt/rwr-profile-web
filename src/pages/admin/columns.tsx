@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { ColumnType } from "antd/es/table";
 import { PersonListItem } from "./model";
 import { PersonListItemMapper } from "./mapper";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC } from "react";
 import { Typography, Divider } from "antd";
 import './GroupReadme.css';

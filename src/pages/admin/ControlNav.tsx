@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC } from "react";
 import { Tabs } from "antd";
 import { ModeEnum } from "./enum";

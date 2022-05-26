@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { PersonListItem } from "./model";
 import { QueryModeEnum, QueryTypeEnum } from "./type";
 import {ModeEnum} from "./enum";

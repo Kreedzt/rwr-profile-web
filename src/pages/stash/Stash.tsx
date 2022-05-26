@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
 import { RouteComponentProps } from "@reach/router";
 import { Alert, Button } from "antd";

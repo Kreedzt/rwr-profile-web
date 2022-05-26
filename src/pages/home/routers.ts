@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 interface NavRouterItem {
   link: string;
   name: string;

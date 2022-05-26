@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Button, Input, List, message, Modal } from "antd";
 import { StashItem } from "../../models/person";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import { FC, useState } from "react";
 import { Redirect, Router } from "@reach/router";
 import Login from "./pages/login/Login";

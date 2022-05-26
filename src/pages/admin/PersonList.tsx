@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, {
-  FC,
-  forwardRef,
-  MutableRefObject,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
+    FC,
+    forwardRef,
+    MutableRefObject,
+    useCallback,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
 import { Button, Table, Modal, Typography } from "antd";
 import { PersonService } from "../../services/person";

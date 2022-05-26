@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
 import { Button, Form, Input, message, Typography } from "antd";
 import { LoginReq, RegisterReq } from "../../models/user";
