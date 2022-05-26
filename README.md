@@ -1,13 +1,5 @@
 # RWR GFL 存档管理系统
 
-## 快速上手
-
-> 该项目依赖后端运行, 对应后端: https://github.com/Kreedzt/rwr-profile-server
-
-下载本项目[构建后代码](https://github.com/Kreedzt/rwr-profile-web/releases)，然后下载后端[构建后代码](https://github.com/Kreedzt/rwr-profile-server/releases)，配合 nginx 托管，并放置 `config.json` 文件和 `users.json` 文件，最后启动后端及 nginx 即可
-
-> 后端部署见: https://github.com/Kreedzt/rwr-profile-server
-
 ## 成品展示
 
 ![预览图片](preview.png)
@@ -86,6 +78,10 @@ pnpm build
   - 提供存档信息查询功能
   - 提供全服兵种调整功能
   - 提供全服物品删除功能
+  
+## 部署
+
+见 [部署文档](https://github.com/Kreedzt/rwr-profile-web/blob/master/DEPLOYMENT.md)
 
 ## 其他项目
 

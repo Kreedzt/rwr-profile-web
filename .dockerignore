@@ -1,0 +1,10 @@
+/.github
+/.idea
+/node_modules
+/.log
+
+LICENSE
+.ignore
+.prettierrc
+*.png
+*.7z
