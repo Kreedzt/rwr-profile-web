@@ -15,7 +15,7 @@ COPY ./ ./
 RUN pnpm build
 
 # run
-FROM nginx
+FROM nginx:1.22.0-alpine
 
 COPY --from=build /app/dist /dist
 COPY ./nginx.conf /etc/nginx/nginx.conf
