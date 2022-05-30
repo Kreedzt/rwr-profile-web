@@ -233,16 +233,16 @@ const QuickItems: FC<QuickItemsProps> = ({ onClickQuickItem }) => {
           </Form.Item>
           <Form.Item
             name="label"
-            label="label"
+            label="标签名"
             required
             rules={[
               {
                 required: true,
-                message: "请输入 label 值",
+                message: "请输入标签名",
               },
             ]}
           >
-            <Input placeholder="请输入 label 值(仅展示用, 随便输入)" />
+            <Input placeholder="请输入标签名(仅展示用, 随便输入)" />
           </Form.Item>
         </Form>
       </Modal>
