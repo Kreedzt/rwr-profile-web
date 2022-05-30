@@ -5,7 +5,7 @@ import { request, userIdPreCheck } from "./request";
 export const SYSTEM_API_PREFIX = "system";
 
 export const SystemService = {
-  query: async () => {
+  queryQuickItems: async () => {
     const user_id = await userIdPreCheck();
 
     return (await request(
@@ -13,7 +13,7 @@ export const SystemService = {
       `${SYSTEM_API_PREFIX}/query_quick_items`
     )) as Promise<QuickItem[]>;
   },
-  update: async (params: QuickItem[]) => {
+  updateQuickItems: async (params: QuickItem[]) => {
     const user_id = await userIdPreCheck();
 
     return (await request(
