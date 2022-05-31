@@ -1,5 +1,10 @@
 # RWR GFL 存档管理系统
 
+![license](https://badgen.net/github/license/Kreedzt/rwr-profile-web)
+![latest release](https://badgen.net/github/release/Kreedzt/rwr-profile-web)
+![commits count](https://badgen.net/github/commits/Kreedzt/rwr-profile-web)
+![last commit](https://badgen.net/github/last-commit/Kreedzt/rwr-profile-web)
+
 ## 成品展示
 
 ![预览图片](preview.png)
