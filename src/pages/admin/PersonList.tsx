@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Table, Modal, Typography } from "antd";
+import { Button, Table, Modal, Typography, message } from "antd";
 import { PersonService } from "../../services/person";
 import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
@@ -20,6 +20,9 @@ import CodeQuery from "./personListComponents/CodeQuery/CodeQuery";
 import "./PersonList.less";
 import QuickQuery from "./personListComponents/QuickQuery/QuickQuery";
 import AsscociateNames from "./personListComponents/AssociateNames/AsscociateNames";
+import ProfileData from "./personListComponents/ProfileData/ProfileData";
+import { Person } from "../../models/person";
+import { Profile } from "../../models/profile";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -38,18 +41,25 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const [selectedList, setSelectedList] = useState<
     PersonListItem["profile_id"][]
   >([]);
-  const [modalOpt, setModalOpt] = useState<{
+  const [associateModalOpt, setAssociateModalOpt] = useState<{
     visible: boolean;
     personList: PersonListItem[];
   }>({
     visible: false,
     personList: [],
   });
+  const [dataModalOpt, setDataModalOpt] = useState<{
+    visible: boolean;
+    data?: [number, Person, Profile];
+  }>({
+    visible: false,
+  });
   /**
      映射关系: [sid, [profile_id]]
    */
   const sidMapRef = useRef<Map<string, number[]>>(new Map());
   const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
+  const rawDataMapRef = useRef<Map<number, [Person, Profile]>>(new Map());
 
   useImperativeHandle(
     ref,
@@ -67,6 +77,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
 
       sidMapRef.current.clear();
       allProfileIdMapRef.current.clear();
+      rawDataMapRef.current.clear();
 
       personListRes.forEach((info) => {
         const resInfo: PersonListItem = {
@@ -96,6 +107,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         }
 
         allProfileIdMapRef.current.set(resInfo.profile_id, resInfo);
+        rawDataMapRef.current.set(info[0], [info[1], info[2]]);
       });
 
       allProfileIdMapRef.current.forEach((info) => {
@@ -117,9 +129,12 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setQueryLoading(false);
   }, []);
 
-  const onQuickQuery = useCallback((filterCb) => {
-    setDisplayList((prev) => filterCb(prev));
-  }, []);
+  const onQuickQuery = useCallback(
+    (filterCb) => {
+      setDisplayList(filterCb(dataList));
+    },
+    [dataList]
+  );
 
   const onClearQuery = useCallback(() => {
     setDisplayList(Array.from(allProfileIdMapRef.current.values()));
@@ -158,15 +173,31 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
       modalPersonList.push(personItem);
     });
 
-    setModalOpt({
+    setAssociateModalOpt({
       visible: true,
       personList: modalPersonList,
     });
   }, []);
 
+  const onViewProfileData = useCallback((data: PersonListItem) => {
+    const mapData = rawDataMapRef.current.get(data.profile_id);
+
+    if (!mapData) {
+      message.warn("未找到用户数据");
+      return;
+    }
+    setDataModalOpt({
+      visible: true,
+      data: [data.profile_id, ...mapData],
+    });
+  }, []);
+
   const linkableColumns = useMemo(() => {
-    return getLinkablePersonListColumns(onQueryAssociatedModal);
-  }, [onQueryAssociatedModal]);
+    return getLinkablePersonListColumns(
+      onQueryAssociatedModal,
+      onViewProfileData
+    );
+  }, [onQueryAssociatedModal, onViewProfileData]);
 
   return (
     <div className="person-list">
@@ -210,9 +241,9 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         style={{
           overflow: "auto",
         }}
-        visible={modalOpt.visible}
+        visible={associateModalOpt.visible}
         onCancel={() => {
-          setModalOpt({
+          setAssociateModalOpt({
             visible: false,
             personList: [],
           });
@@ -220,7 +251,23 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         title="查询关联用户名"
         footer={null}
       >
-        <AsscociateNames personList={modalOpt.personList} />
+        <AsscociateNames personList={associateModalOpt.personList} />
+      </Modal>
+      <Modal
+        width="80vw"
+        visible={dataModalOpt.visible}
+        style={{
+          overflow: "auto",
+        }}
+        title="查询存档数据"
+        onCancel={() => {
+          setDataModalOpt({
+            visible: false,
+          });
+        }}
+        footer={null}
+      >
+        <ProfileData data={dataModalOpt.data} />
       </Modal>
     </div>
   );

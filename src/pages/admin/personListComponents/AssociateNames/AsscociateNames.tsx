@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-only
 import React, { FC } from "react";
 import { Table } from "antd";
 import { PERSON_LIST_COLUMNS } from "../../columns";

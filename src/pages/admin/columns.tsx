@@ -2,6 +2,7 @@
 import { ColumnType } from "antd/es/table";
 import { PersonListItem } from "./model";
 import { PersonListItemMapper } from "./mapper";
+import { Button } from "antd";
 
 export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
   {
@@ -68,7 +69,8 @@ export const PERSON_LIST_COLUMNS: ColumnType<PersonListItem>[] = [
 ];
 
 export const getLinkablePersonListColumns = (
-  onQueryAssociated: (sid: string) => void
+  onQueryAssociated: (sid: string) => void,
+  onViewProfileData: (profileId: PersonListItem) => void
 ) => {
   return PERSON_LIST_COLUMNS.map((c) => {
     if (c.key === "associated_count") {
@@ -89,5 +91,19 @@ export const getLinkablePersonListColumns = (
       };
     }
     return c;
-  });
+  }).concat([
+    {
+      title: "操作",
+      key: "profile_id",
+      render: (value: number, record: PersonListItem, index: number) => {
+        return (
+          <span>
+            <Button type="link" onClick={() => onViewProfileData(record)}>
+              查看存档数据
+            </Button>
+          </span>
+        );
+      },
+    },
+  ]);
 };
