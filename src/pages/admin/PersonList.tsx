@@ -1,23 +1,25 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, {
-    FC,
-    forwardRef,
-    MutableRefObject,
-    useCallback,
-    useImperativeHandle,
-    useMemo,
-    useRef,
-    useState,
+  FC,
+  forwardRef,
+  MutableRefObject,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 import { Button, Table, Modal, Typography } from "antd";
 import { PersonService } from "../../services/person";
 import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
-import CustomQuery from "./CustomQuery";
+import CustomQuery from "./personListComponents/CustomQuery/CustomQuery";
 import { QueryItem, QueryModeEnum } from "./type";
 import { parseQueryList } from "./parse";
-import CodeQuery from "./CodeQuery";
+import CodeQuery from "./personListComponents/CodeQuery/CodeQuery";
 import "./PersonList.less";
+import QuickQuery from "./personListComponents/QuickQuery/QuickQuery";
+import AsscociateNames from "./personListComponents/AssociateNames/AsscociateNames";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -115,32 +117,8 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setQueryLoading(false);
   }, []);
 
-  const onQuery5Stars = useCallback(() => {
-    setDisplayList(
-      Array.from(allProfileIdMapRef.current.values()).filter(
-        (item) => item.xp > 10
-      )
-    );
-  }, []);
-
-  const onQueryUniqueBySid = useCallback(() => {
-    /**
-     *  sid 唯一, 大号优先
-     */
-    const tempMap = new Map<string, PersonListItem>();
-
-    allProfileIdMapRef.current.forEach((info) => {
-      const tempMapRes = tempMap.get(info.sid);
-
-      if (tempMapRes === undefined) {
-        tempMap.set(info.sid, info);
-        // 按游玩时间优先覆盖
-      } else if (info.time_played > tempMapRes.time_played) {
-        tempMap.set(info.sid, info);
-      }
-    });
-
-    setDisplayList(Array.from(tempMap.values()));
+  const onQuickQuery = useCallback((filterCb) => {
+    setDisplayList((prev) => filterCb(prev));
   }, []);
 
   const onClearQuery = useCallback(() => {
@@ -204,17 +182,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
             </Button>
           </div>
         </div>
-        <div className="filter-area">
-          <Title level={5}>二次快捷筛选区域(基于所有数据)</Title>
-          <div className="btn-list">
-            <Button loading={queryLoading} onClick={onQuery5Stars}>
-              过滤出所有五星人形
-            </Button>
-            <Button loading={queryLoading} onClick={onQueryUniqueBySid}>
-              按 sid 唯一过滤(游玩时间优先)
-            </Button>
-          </div>
-        </div>
+        <QuickQuery loading={queryLoading} onQuery={onQuickQuery} />
       </div>
       <div className="custom-query-area">
         <CustomQuery loading={queryLoading} onQuery={onCustomQuery} />
@@ -252,14 +220,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         title="查询关联用户名"
         footer={null}
       >
-        <div>
-          <Table
-            rowKey="profile_id"
-            dataSource={modalOpt.personList}
-            columns={PERSON_LIST_COLUMNS}
-          />
-          当前表格内数据总数: {modalOpt.personList.length}
-        </div>
+        <AsscociateNames personList={modalOpt.personList} />
       </Modal>
     </div>
   );

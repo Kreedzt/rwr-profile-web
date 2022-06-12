@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC } from "react";
 import { Button, Input, Select } from "antd";
-import { QueryItem } from "./type";
-import { PersonListItem } from "./model";
-import { PersonListItemMapper, QueryTypeMapper } from "./mapper";
+import { QueryItem } from "../../type";
+import { PersonListItem } from "../../model";
+import { PersonListItemMapper, QueryTypeMapper } from "../../mapper";
 import "./QueryItemControl.css";
 
 interface QueryItemControlProps {

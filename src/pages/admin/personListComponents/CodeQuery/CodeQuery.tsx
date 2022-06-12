@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useRef, useState } from "react";
 import { Button, message, Modal, Typography, Input } from "antd";
-import { PersonListItem } from "./model";
+import { PersonListItem } from "../../model";
 import "./CodeQuery.less";
 
 const { Title } = Typography;
