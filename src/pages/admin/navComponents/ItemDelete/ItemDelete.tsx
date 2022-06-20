@@ -90,7 +90,7 @@ const ItemDelete: FC<ItemSendProps> = ({
               }
               break;
           }
-          message.success(`发放物品成功`);
+          message.success(`删除物品成功`);
         } catch (e) {
           console.log(e);
         }

@@ -82,7 +82,7 @@ nginx -c ../nginx.conf
 
 启动示例:
 ```sh
-docker run --name rwr-profile-web-docker -p 9090:80 --link rwr-profile-server-docker:rwr-profile-server -d zhaozisong0/rwr-profile-web
+docker run --name rwr-profile-web-docker -p 9090:80 --link rwr-profile-server-docker:rwr-profile-server -d zhaozisong0/rwr-profile-web:latest
 ```
 
 以上表明已启动 `rwr-profile-server-docker` 容器名, 启动本容器时加入到 `rwr-profile-server-docker` 网络中
