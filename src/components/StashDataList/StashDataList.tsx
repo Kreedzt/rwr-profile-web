@@ -11,6 +11,11 @@ type StashDataListProps = {
 
 type VisibleListItem = StashItem & {
   id: string;
+  /**
+   * 高亮索引列表:
+   * @example [[0, 2], [4, 5]]
+   */
+  highLightRange: [number, number];
 };
 
 const transformStashDataToVisibleList = (
@@ -20,6 +25,7 @@ const transformStashDataToVisibleList = (
     return {
       ...s,
       id: `${s.index}-${index}`,
+      highLightRange: [0, 0],
     };
   });
 };
@@ -35,7 +41,19 @@ const StashDataList: FC<StashDataListProps> = ({ stashDataList, max }) => {
   const onSearch = useCallback(() => {
     setVisibleList((prev) => {
       if (searchVal) {
-        return prev.filter((s) => s.key.includes(searchVal));
+        return prev
+          .filter((s) => {
+            return s.key.includes(searchVal);
+          })
+          .map((item) => {
+            const startIndex = item.key.indexOf(searchVal);
+            const endIndex = startIndex + searchVal.length;
+
+            return {
+              ...item,
+              highLightRange: [startIndex, endIndex],
+            };
+          });
       }
       return prev;
     });
@@ -74,10 +92,24 @@ const StashDataList: FC<StashDataListProps> = ({ stashDataList, max }) => {
         <div className="header">
           <p>展示方式: key/index/class</p>
         </div>
-        <div>
+        <div className="item-list">
           {visibleList.map((s) => (
-            <div key={s.id}>
-              {s.key} / {s.index} / {s.class}
+            <div className="item-block" key={s.id}>
+              <span className="item-segment">
+                {searchVal ? (
+                  <>
+                    {s.key.slice(0, s.highLightRange[0])}
+                    <span className="highlight">
+                      {s.key.slice(s.highLightRange[0], s.highLightRange[1])}
+                    </span>
+                    {s.key.slice(s.highLightRange[1])}
+                  </>
+                ) : (
+                  s.key
+                )}
+              </span>
+              /<span className="item-segment">{s.index}</span>/
+              <span className="item-segment">{s.class}</span>
             </div>
           ))}
         </div>

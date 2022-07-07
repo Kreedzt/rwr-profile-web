@@ -9,7 +9,18 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Table, Modal, Typography, message } from "antd";
+import {
+  Button,
+  Table,
+  Modal,
+  Typography,
+  message,
+  Dropdown,
+  Space,
+  Menu,
+  Checkbox,
+  Popover,
+} from "antd";
 import { PersonService } from "../../services/person";
 import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
@@ -17,12 +28,13 @@ import CustomQuery from "./personListComponents/CustomQuery/CustomQuery";
 import { QueryItem, QueryModeEnum } from "./type";
 import { parseQueryList } from "./parse";
 import CodeQuery from "./personListComponents/CodeQuery/CodeQuery";
-import "./PersonList.less";
 import QuickQuery from "./personListComponents/QuickQuery/QuickQuery";
 import AsscociateNames from "./personListComponents/AssociateNames/AsscociateNames";
 import ProfileData from "./personListComponents/ProfileData/ProfileData";
 import { Person } from "../../models/person";
 import { Profile } from "../../models/profile";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import "./PersonList.less";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -60,6 +72,17 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const sidMapRef = useRef<Map<string, number[]>>(new Map());
   const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
   const rawDataMapRef = useRef<Map<number, [Person, Profile]>>(new Map());
+  /**
+   * 显示的列名
+   */
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
+    () => {
+      return PERSON_LIST_COLUMNS.reduce((acc, col) => {
+        acc[col.dataIndex as string] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+    }
+  );
 
   useImperativeHandle(
     ref,
@@ -192,12 +215,31 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     });
   }, []);
 
+  const onToggleColumns = useCallback(
+    (dataIndex: string) => (e: CheckboxChangeEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setVisibleColumns((prev) => {
+        return {
+          ...prev,
+          [dataIndex]: e.target.checked,
+        };
+      });
+    },
+    []
+  );
+
   const linkableColumns = useMemo(() => {
     return getLinkablePersonListColumns(
       onQueryAssociatedModal,
       onViewProfileData
-    );
-  }, [onQueryAssociatedModal, onViewProfileData]);
+    ).filter((col, index) => {
+      if (col.title === "操作") {
+        return true;
+      }
+      return visibleColumns[col.dataIndex as string];
+    });
+  }, [onQueryAssociatedModal, onViewProfileData, visibleColumns]);
 
   return (
     <div className="person-list">
@@ -220,6 +262,33 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
       </div>
       <div className="code-query-area">
         <CodeQuery loading={queryLoading} onQuery={onCodeQuery} />
+      </div>
+      <div className="table-toolbar">
+        <Popover
+          trigger={["click"]}
+          title="勾选来显示列"
+          content={
+            <div
+              onChange={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {PERSON_LIST_COLUMNS.map((col) => (
+                <div key={col.key}>
+                  <Checkbox
+                    checked={visibleColumns[col.dataIndex as string]}
+                    onChange={onToggleColumns(col.dataIndex as string)}
+                  >
+                    {col.title}
+                  </Checkbox>
+                </div>
+              ))}
+            </div>
+          }
+        >
+          <Button>显示/隐藏列</Button>
+        </Popover>
       </div>
       <Table
         className="person-table"
