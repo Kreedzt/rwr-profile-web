@@ -5,6 +5,7 @@ import { ModeTextMapper } from "../../mapper";
 import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
+import { parseEffectedCountText } from "../../parse";
 
 const { Title } = Typography;
 
@@ -26,10 +27,20 @@ const SoldierGroup: FC<SoldierGroupProps> = ({
   const onSubmitSoliderGroup = useCallback(() => {
     const mode = onGetMode();
 
+    const checkedList = onGetCheckedList();
+    const displayList = onGetDisplayList();
+
     Modal.confirm({
       title: `准备批量改造, 改造模式: ${ModeTextMapper[mode]}`,
       content: (
         <div>
+          <p
+            style={{
+              color: "#b00020",
+            }}
+          >
+            影响范围: {parseEffectedCountText(mode, checkedList, displayList)}
+          </p>
           <p>更换改造为: {groupName}</p>
           <p>消耗 RP 为: {groupCost}</p>
         </div>
@@ -62,9 +73,9 @@ const SoldierGroup: FC<SoldierGroupProps> = ({
 
             case ModeEnum.LIST: {
               const profile_id_list =
-                onGetDisplayList().map((d) => d.profile_id) ?? [];
+                displayList.map((d) => d.profile_id) ?? [];
 
-              console.log("displayList: ", onGetDisplayList());
+              console.log("displayList: ", displayList);
 
               const res = await PersonService.batchUpdateSoldierGroup(
                 profile_id_list,
@@ -88,8 +99,8 @@ const SoldierGroup: FC<SoldierGroupProps> = ({
               break;
             }
             case ModeEnum.CHECKED: {
-              const profile_id_list = onGetCheckedList();
-              console.log("checkedList: ", onGetCheckedList());
+              const profile_id_list = checkedList;
+              console.log("checkedList: ", checkedList);
 
               const res = await PersonService.batchUpdateSoldierGroup(
                 profile_id_list,

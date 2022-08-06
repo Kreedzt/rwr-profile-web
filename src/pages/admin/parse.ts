@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
+import { ModeEnum } from "./enum";
 import { PersonListItem } from "./model";
 import { QueryItem, QueryModeEnum, QueryTypeEnum } from "./type";
 
@@ -43,4 +44,19 @@ export const parseQueryList = (
   }
 
   return res;
+};
+
+export const parseEffectedCountText = (
+  mode: ModeEnum,
+  checkedList: number[],
+  displayList: PersonListItem[]
+): string => {
+  switch (mode) {
+    case ModeEnum.ALL:
+      return "全服玩家";
+    case ModeEnum.LIST:
+      return `${displayList.length}位玩家`;
+    case ModeEnum.CHECKED:
+      return `${checkedList.length}位玩家`;
+  }
 };

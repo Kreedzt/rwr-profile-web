@@ -7,6 +7,7 @@ import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
 import { ModeTextMapper } from "../../mapper";
 import "./ItemDelete.less";
+import { parseEffectedCountText } from "../../parse";
 
 const { Title } = Typography;
 
@@ -48,10 +49,20 @@ const ItemDelete: FC<ItemSendProps> = ({
     const mode = onGetMode();
     const modeText = ModeTextMapper[mode];
 
+    const checkedList = onGetCheckedList();
+    const displayList = onGetDisplayList();
+
     Modal.confirm({
       title: `准备删除, 操作模式: ${modeText}`,
       content: (
         <div>
+          <p
+            style={{
+              color: "#b00020",
+            }}
+          >
+            影响范围: {parseEffectedCountText(mode, checkedList, displayList)}
+          </p>
           <p>物品总数: {tempDeleteList.length}</p>
           <p>物品代码列表:</p>
           {tempDeleteList.map((k) => (
@@ -68,9 +79,9 @@ const ItemDelete: FC<ItemSendProps> = ({
             case ModeEnum.LIST:
               {
                 const profile_id_list =
-                  onGetDisplayList().map((d) => d.profile_id) ?? [];
+                  displayList.map((d) => d.profile_id) ?? [];
 
-                console.log("displayList: ", onGetDisplayList());
+                console.log("displayList: ", displayList);
 
                 await PersonService.batchDeleteItemList(
                   profile_id_list,
@@ -80,9 +91,9 @@ const ItemDelete: FC<ItemSendProps> = ({
               break;
             case ModeEnum.CHECKED:
               {
-                const profile_id_list = onGetCheckedList();
+                const profile_id_list = checkedList;
 
-                console.log("checkedList: ", onGetCheckedList());
+                console.log("checkedList: ", checkedList);
                 await PersonService.batchDeleteItemList(
                   profile_id_list,
                   tempDeleteList

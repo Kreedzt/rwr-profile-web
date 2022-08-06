@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
-import { message, Modal, Typography, Button, Input } from "antd";
+import { message, Modal, Typography, Button, Input, Divider } from "antd";
 import { StashItem } from "../../../../models/person";
 import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
 import { ModeTextMapper } from "../../mapper";
 import QuickItems from "./QuickItems";
+import { parseEffectedCountText } from "../../parse";
 
 type ItemSendProps = {
   onGetMode: () => ModeEnum;
@@ -89,10 +90,22 @@ const ItemSend: FC<ItemSendProps> = ({
     const mode = onGetMode();
     const modeText = ModeTextMapper[mode];
 
+    const checkedList = onGetCheckedList();
+    const displayList = onGetDisplayList();
+
     Modal.confirm({
       title: `准备发放, 发放模式: ${modeText}`,
       content: (
         <div>
+          <p
+            style={{
+              color: "#b00020",
+            }}
+          >
+            影响范围: {parseEffectedCountText(mode, checkedList, displayList)}
+          </p>
+          <p>注意: 若某玩家的背包在发放后超出限制, 则会跳过该玩家</p>
+          <Divider />
           <p>物品总数: {tempSendList.length}</p>
           <p>物品代码列表:</p>
           <code>
@@ -115,7 +128,7 @@ const ItemSend: FC<ItemSendProps> = ({
             case ModeEnum.LIST:
               {
                 const profile_id_list =
-                  onGetDisplayList().map((d) => d.profile_id) ?? [];
+                  displayList.map((d) => d.profile_id) ?? [];
 
                 console.log("displayList: ", onGetDisplayList());
 
@@ -127,9 +140,9 @@ const ItemSend: FC<ItemSendProps> = ({
               break;
             case ModeEnum.CHECKED:
               {
-                const profile_id_list = onGetCheckedList();
+                const profile_id_list = checkedList;
 
-                console.log("checkedList: ", onGetCheckedList());
+                console.log("checkedList: ", checkedList);
                 await PersonService.batchInsertPersonBackpackList(
                   profile_id_list,
                   tempSendList

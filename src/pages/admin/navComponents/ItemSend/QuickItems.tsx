@@ -9,6 +9,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Skeleton,
 } from "antd";
 import { StashItem } from "../../../../models/person";
 import { QuickItem } from "../../../../models/system";
@@ -26,6 +27,7 @@ const QuickItems: FC<QuickItemsProps> = ({ onClickQuickItem }) => {
   const [mode, setMode] = useState<"edit" | "view">("view");
   const [recordItem, setRecordItem] = useState<QuickItem | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   const onClickItem = useCallback(
@@ -36,6 +38,7 @@ const QuickItems: FC<QuickItemsProps> = ({ onClickQuickItem }) => {
   );
 
   const onRefreshQuickItemsList = useCallback(async () => {
+    setLoading(true);
     try {
       const res = await SystemService.queryQuickItems();
       setQuickItemList(res);
@@ -43,6 +46,8 @@ const QuickItems: FC<QuickItemsProps> = ({ onClickQuickItem }) => {
     } catch (e) {
       /* message.error() */
       console.dir(e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -148,30 +153,34 @@ const QuickItems: FC<QuickItemsProps> = ({ onClickQuickItem }) => {
         </div>
       </Title>
 
-      <div className="quick-btn-list">
-        {mode === "view" &&
-          quickItemList.map((c) => {
-            const { label, ...stashInfo } = c;
-            return (
-              <Button key={c.key} onClick={() => onClickItem(stashInfo)}>
-                {label}
-              </Button>
-            );
-          })}
-        {mode === "edit" &&
-          quickItemList.map((c) => {
-            return (
-              <Tag
-                key={c.key}
-                closable
-                onClick={() => onShowEditModal(c)}
-                onClose={() => onRemoveItem(c.key)}
-              >
-                {c.label}
-              </Tag>
-            );
-          })}
-      </div>
+      {loading ? (
+        <Skeleton.Button active />
+      ) : (
+        <div className="quick-btn-list">
+          {mode === "view" &&
+            quickItemList.map((c) => {
+              const { label, ...stashInfo } = c;
+              return (
+                <Button key={c.key} onClick={() => onClickItem(stashInfo)}>
+                  {label}
+                </Button>
+              );
+            })}
+          {mode === "edit" &&
+            quickItemList.map((c) => {
+              return (
+                <Tag
+                  key={c.key}
+                  closable
+                  onClick={() => onShowEditModal(c)}
+                  onClose={() => onRemoveItem(c.key)}
+                >
+                  {c.label}
+                </Tag>
+              );
+            })}
+        </div>
+      )}
 
       <Modal
         title={`${recordItem ? "编辑" : "添加"}快捷操作项`}
