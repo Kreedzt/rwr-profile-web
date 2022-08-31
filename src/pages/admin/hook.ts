@@ -6,6 +6,9 @@ import { Profile } from "../../models/profile";
 import { PersonService } from "../../services/person";
 import { PERSON_LIST_COLUMNS } from "./columns";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { StorageService } from "../../services/storage";
+import { StorageQueryItem } from "../../models/query";
+import dayjs from "dayjs";
 
 export const useQueryList = () => {
   const [queryLoading, setQueryLoading] = useState(false);
@@ -20,16 +23,13 @@ export const useQueryList = () => {
   const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
   const rawDataMapRef = useRef<Map<number, [Person, Profile]>>(new Map());
 
-  const onQueryAll = useCallback(async () => {
-    setQueryLoading(true);
-    try {
-      const personListRes = await PersonService.queryAll();
-
+  const refreshDataList = useCallback(
+    (dataList: Array<[number, Person, Profile]>) => {
       sidMapRef.current.clear();
       allProfileIdMapRef.current.clear();
       rawDataMapRef.current.clear();
 
-      personListRes.forEach((info) => {
+      dataList.forEach((info) => {
         const resInfo: PersonListItem = {
           profile_id: info[0],
           username: info[2].username,
@@ -72,6 +72,24 @@ export const useQueryList = () => {
 
       setDataList(extractedRes);
       setDisplayList(extractedRes);
+    },
+    []
+  );
+
+  const onQueryAll = useCallback(async () => {
+    setQueryLoading(true);
+    try {
+      const personListRes = await PersonService.queryAll();
+
+      refreshDataList(personListRes);
+
+      const storageQueryItem: StorageQueryItem = {
+        dataList: personListRes,
+        timeStamp: dayjs().unix(),
+      };
+
+      await StorageService.pushQueryDataList(storageQueryItem);
+
       console.log("personListRes", personListRes);
     } catch (e) {
       console.log(e);
@@ -86,6 +104,7 @@ export const useQueryList = () => {
     dataList,
     displayList,
     setDisplayList,
+    refreshDataList,
     onQueryAll,
     queryLoading,
   };
