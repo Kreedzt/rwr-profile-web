@@ -34,8 +34,15 @@ import ProfileData from "./personListComponents/ProfileData/ProfileData";
 import { Person } from "../../models/person";
 import { Profile } from "../../models/profile";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { StorageQueryItem } from "../../models/query";
+import MainQueryArea from "./personListComponents/MainQueryArea/MainQueryArea";
+import {
+  useQueryList,
+  useSelectedList,
+  useStorageQueryList,
+  useVisibleColumns,
+} from "./hook";
 import "./PersonList.less";
-import { useQueryList, useSelectedList, useVisibleColumns } from "./hook";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -50,16 +57,20 @@ export const usePersonListRef = (): MutableRefObject<PersonListRef | null> =>
 const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const { selectedList, setSelectedList } = useSelectedList();
 
+  const { storageList, storageCount, refreshStorageList } =
+    useStorageQueryList();
+
   const {
     dataList,
     displayList,
     setDisplayList,
+    refreshDataList,
     onQueryAll,
     queryLoading,
     allProfileIdMapRef,
     sidMapRef,
     rawDataMapRef,
-  } = useQueryList();
+  } = useQueryList(refreshStorageList);
 
   const { visibleColumns, onToggleColumns } = useVisibleColumns();
 
@@ -149,6 +160,10 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     });
   }, []);
 
+  const onUseStorage = useCallback((data: StorageQueryItem["dataList"]) => {
+    refreshDataList(data);
+  }, []);
+
   const linkableColumns = useMemo(() => {
     return getLinkablePersonListColumns(
       onQueryAssociatedModal,
@@ -164,17 +179,14 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   return (
     <div className="person-list">
       <div className="quick-query-area">
-        <div className="main-area">
-          <Title level={5}>查询区域</Title>
-          <div className="btn-list">
-            <Button loading={queryLoading} type="primary" onClick={onQueryAll}>
-              查询全部(先点我查询)
-            </Button>
-            <Button loading={queryLoading} danger onClick={onClearQuery}>
-              清空所有筛选
-            </Button>
-          </div>
-        </div>
+        <MainQueryArea
+          queryLoading={queryLoading}
+          onQueryAll={onQueryAll}
+          onClearQuery={onClearQuery}
+          storageList={storageList}
+          storageCount={storageCount}
+          onUseStorage={onUseStorage}
+        />
         <QuickQuery loading={queryLoading} onQuery={onQuickQuery} />
       </div>
       <div className="custom-query-area">

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import { UserInfo } from "../models/user";
 import {
+  MAX_QUERY_LIST_STORAGE,
   QUERY_LIST_STORAGE_KEY,
   USER_ADMIN_KEY,
   USER_ID_STORAGE_KEY,
@@ -38,6 +39,11 @@ export const StorageService = {
     const storageList: StorageQueryItem[] =
       (await localforage.getItem(QUERY_LIST_STORAGE_KEY)) ?? [];
     const newStorageList = [...storageList, next];
+
+    if (newStorageList.length > MAX_QUERY_LIST_STORAGE) {
+      newStorageList.shift();
+    }
+
     await localforage.setItem(QUERY_LIST_STORAGE_KEY, newStorageList);
   },
   getQueryDataList: async () => {

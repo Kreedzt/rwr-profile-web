@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PersonListItem } from "./model";
 import { Person } from "../../models/person";
 import { Profile } from "../../models/profile";
@@ -10,7 +10,7 @@ import { StorageService } from "../../services/storage";
 import { StorageQueryItem } from "../../models/query";
 import dayjs from "dayjs";
 
-export const useQueryList = () => {
+export const useQueryList = (queryCallBack: () => void) => {
   const [queryLoading, setQueryLoading] = useState(false);
   const [dataList, setDataList] = useState<PersonListItem[]>([]);
 
@@ -90,6 +90,8 @@ export const useQueryList = () => {
 
       await StorageService.pushQueryDataList(storageQueryItem);
 
+      queryCallBack();
+
       console.log("personListRes", personListRes);
     } catch (e) {
       console.log(e);
@@ -153,5 +155,28 @@ export const useVisibleColumns = () => {
   return {
     visibleColumns,
     onToggleColumns,
+  };
+};
+
+export const useStorageQueryList = () => {
+  const [storageList, setStorageList] = useState<StorageQueryItem[]>([]);
+
+  const storageCount = useMemo(() => {
+    return storageList.length;
+  }, [storageList]);
+
+  const refreshStorageList = useCallback(async () => {
+    const res = await StorageService.getQueryDataList();
+    setStorageList(res ?? []);
+  }, []);
+
+  useEffect(() => {
+    refreshStorageList();
+  }, []);
+
+  return {
+    storageList,
+    storageCount,
+    refreshStorageList,
   };
 };
