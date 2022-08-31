@@ -13,6 +13,7 @@ type MainQueryAreaProps = {
   storageList: StorageQueryItem[];
   storageCount: number;
   onUseStorage: (data: StorageQueryItem["dataList"]) => void;
+  onClearStorage: () => Promise<void>;
 };
 
 const MainQueryArea: FC<MainQueryAreaProps> = ({
@@ -22,6 +23,7 @@ const MainQueryArea: FC<MainQueryAreaProps> = ({
   storageCount,
   storageList,
   onUseStorage,
+  onClearStorage,
 }) => {
   return (
     <div className="main-area">
@@ -38,6 +40,7 @@ const MainQueryArea: FC<MainQueryAreaProps> = ({
           storageCount={storageCount}
           onUse={onUseStorage}
           queryLoading={queryLoading}
+          onClear={onClearStorage}
         />
       </div>
     </div>

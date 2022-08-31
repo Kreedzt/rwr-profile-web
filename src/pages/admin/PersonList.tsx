@@ -57,7 +57,7 @@ export const usePersonListRef = (): MutableRefObject<PersonListRef | null> =>
 const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const { selectedList, setSelectedList } = useSelectedList();
 
-  const { storageList, storageCount, refreshStorageList } =
+  const { storageList, storageCount, refreshStorageList, clearStorageList } =
     useStorageQueryList();
 
   const {
@@ -186,6 +186,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           storageList={storageList}
           storageCount={storageCount}
           onUseStorage={onUseStorage}
+          onClearStorage={clearStorageList}
         />
         <QuickQuery loading={queryLoading} onQuery={onQuickQuery} />
       </div>

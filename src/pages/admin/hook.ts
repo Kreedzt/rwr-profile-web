@@ -170,6 +170,11 @@ export const useStorageQueryList = () => {
     setStorageList(res ?? []);
   }, []);
 
+  const clearStorageList = useCallback(async () => {
+    await StorageService.clearQueryDataList();
+    setStorageList([]);
+  }, []);
+
   useEffect(() => {
     refreshStorageList();
   }, []);
@@ -178,5 +183,6 @@ export const useStorageQueryList = () => {
     storageList,
     storageCount,
     refreshStorageList,
+    clearStorageList
   };
 };

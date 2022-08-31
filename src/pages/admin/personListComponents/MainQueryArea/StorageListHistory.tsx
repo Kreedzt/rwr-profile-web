@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useMemo } from "react";
-import { Badge, Button, message, Popover } from "antd";
+import { Badge, Button, message, Modal, Popover } from "antd";
 import dayjs from "dayjs";
 import { StorageQueryItem } from "../../../../models/query";
 import { MAX_QUERY_LIST_STORAGE } from "../../../../constants";
@@ -10,6 +10,7 @@ type StorageListHistoryProps = {
   storageList: StorageQueryItem[];
   storageCount: number;
   onUse: (data: StorageQueryItem["dataList"]) => void;
+  onClear: () => Promise<void>;
   queryLoading: boolean;
 };
 
@@ -18,6 +19,7 @@ const StorageListHistory: FC<StorageListHistoryProps> = ({
   storageCount,
   onUse,
   queryLoading,
+  onClear,
 }) => {
   const displayList = useMemo(() => {
     return storageList.reverse().map((s) => {
@@ -40,17 +42,33 @@ const StorageListHistory: FC<StorageListHistoryProps> = ({
     [onUse, queryLoading]
   );
 
+  const onClearAll = useCallback(() => {
+    Modal.confirm({
+      title: "清除全部历史数据",
+      onOk: async () => {
+        await onClear();
+      },
+    });
+  }, []);
+
   return (
     <Popover
       trigger={["click"]}
-      title="选择数据"
+      title={
+        <div className="storage-list-history popover-title">
+          <span>选择数据</span>
+          <Button type="link" onClick={onClearAll}>
+            清除全部
+          </Button>
+        </div>
+      }
       content={
         <div className="storage-list-history popover-content">
           {displayList.map((d) => {
             return (
               <div className="data-item">
                 <span className="time-desc">{d.time}的数据</span>
-                <Button onClick={() => onSelect(d.data)}>使用</Button>
+                <Button type="link" onClick={() => onSelect(d.data)}>使用</Button>
               </div>
             );
           })}

@@ -1,12 +1,20 @@
-.storage-list-history.popover-content {
-  max-height: 400px;
-  overflow: auto;
+.storage-list-history {
+  &.popover-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-  .data-item {
-    //display: flex;
+  &.popover-content {
+    max-height: 400px;
+    overflow: auto;
 
-    .time-desc {
-      margin-right: 10px;
+    .data-item {
+      //display: flex;
+
+      .time-desc {
+        margin-right: 10px;
+      }
     }
   }
 }
