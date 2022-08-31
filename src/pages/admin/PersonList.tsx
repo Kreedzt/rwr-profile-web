@@ -26,7 +26,7 @@ import { getLinkablePersonListColumns, PERSON_LIST_COLUMNS } from "./columns";
 import { PersonListItem } from "./model";
 import CustomQuery from "./personListComponents/CustomQuery/CustomQuery";
 import { QueryItem, QueryModeEnum } from "./type";
-import { parseQueryList } from "./parse";
+import { parseQueryList } from "./util";
 import CodeQuery from "./personListComponents/CodeQuery/CodeQuery";
 import QuickQuery from "./personListComponents/QuickQuery/QuickQuery";
 import AsscociateNames from "./personListComponents/AssociateNames/AsscociateNames";
@@ -43,6 +43,7 @@ import {
   useVisibleColumns,
 } from "./hook";
 import "./PersonList.less";
+import {TABLE_DATA_REFRESH_SUCCESS} from "./constant";
 
 export interface PersonListRef {
   getDisplayList: () => PersonListItem[];
@@ -66,6 +67,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
     setDisplayList,
     refreshDataList,
     onQueryAll,
+    onQueryItem,
     queryLoading,
     allProfileIdMapRef,
     sidMapRef,
@@ -100,12 +102,16 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const onQuickQuery = useCallback(
     (filterCb) => {
       setDisplayList(filterCb(dataList));
+
+      message.success(TABLE_DATA_REFRESH_SUCCESS);
     },
     [dataList]
   );
 
   const onClearQuery = useCallback(() => {
     setDisplayList(Array.from(allProfileIdMapRef.current.values()));
+
+    message.success(TABLE_DATA_REFRESH_SUCCESS);
   }, []);
 
   const onCustomQuery = useCallback(
@@ -115,6 +121,8 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           return parseQueryList(info, query, mode);
         });
       });
+
+      message.success(TABLE_DATA_REFRESH_SUCCESS);
     },
     []
   );
@@ -126,6 +134,8 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
           return filterFn(info);
         });
       });
+
+      message.success(TABLE_DATA_REFRESH_SUCCESS);
     },
     []
   );
@@ -163,6 +173,14 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
   const onUseStorage = useCallback((data: StorageQueryItem["dataList"]) => {
     refreshDataList(data);
   }, []);
+
+  const onDataModalRefresh = useCallback(async (id: number) => {
+    const res = await onQueryItem(id);
+    setDataModalOpt((prev) => ({
+      ...prev,
+      data: res,
+    }));
+  }, [onQueryItem]);
 
   const linkableColumns = useMemo(() => {
     return getLinkablePersonListColumns(
@@ -269,7 +287,7 @@ const PersonList = forwardRef<PersonListRef>((_props, ref) => {
         }}
         footer={null}
       >
-        <ProfileData data={dataModalOpt.data} />
+        <ProfileData data={dataModalOpt.data} onRefresh={onDataModalRefresh} />
       </Modal>
     </div>
   );

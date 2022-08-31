@@ -1,10 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import { API_PREFIX } from "../constants";
 import { request, uploadRequest, userIdPreCheck } from "./request";
+import { Profile } from "../models/profile";
 
 export const PROFILE_API_PREFIX = "profile";
 
 export const ProfileService = {
+  query: async (id?: number) => {
+    const user_id = await userIdPreCheck();
+
+    return (await request(
+      "GET",
+      `${PROFILE_API_PREFIX}/query/${id ?? user_id}`
+    )) as Promise<Profile>;
+  },
   getDownloadUrl: async () => {
     const user_id = await userIdPreCheck();
     return `${API_PREFIX}/${PROFILE_API_PREFIX}/download/${user_id}`;

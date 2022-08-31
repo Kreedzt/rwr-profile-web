@@ -2,9 +2,10 @@
 import React, { FC, useCallback, useState } from "react";
 import QueryItemControl from "../QueryItemControl/QueryItemControl";
 import { QueryItem, QueryModeEnum, QueryTypeEnum } from "../../type";
-import { Button, Select, Typography } from "antd";
+import { Button, message, Select, Typography } from "antd";
 import { PersonListItemMapper, QueryModeMapper } from "../../mapper";
 import "./CustomQuery.less";
+import { TABLE_DATA_REFRESH_SUCCESS } from "../../constant";
 
 interface CustomQueryProps {
   onQuery: (q: QueryItem[], mode: QueryModeEnum) => void;

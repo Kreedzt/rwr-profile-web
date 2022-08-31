@@ -7,12 +7,12 @@ import { API_PREFIX } from "../constants";
 export const PERSON_API_PREFIX = "person";
 
 export const PersonService = {
-  query: async () => {
+  query: async (id?: number) => {
     const user_id = await userIdPreCheck();
 
     return (await request(
       "GET",
-      `${PERSON_API_PREFIX}/query/${user_id}`
+      `${PERSON_API_PREFIX}/query/${id ?? user_id}`
     )) as Promise<Person>;
   },
   queryAll: async () => {

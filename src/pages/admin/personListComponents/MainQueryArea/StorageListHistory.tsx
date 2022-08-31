@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { StorageQueryItem } from "../../../../models/query";
 import { MAX_QUERY_LIST_STORAGE } from "../../../../constants";
 import "./StorageListHistory.less";
+import {TABLE_DATA_REFRESH_SUCCESS} from "../../constant";
 
 type StorageListHistoryProps = {
   storageList: StorageQueryItem[];
@@ -37,7 +38,7 @@ const StorageListHistory: FC<StorageListHistoryProps> = ({
         return;
       }
       onUse(data);
-      message.success("已更新表格数据");
+      message.success(TABLE_DATA_REFRESH_SUCCESS);
     },
     [onUse, queryLoading]
   );

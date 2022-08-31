@@ -6,8 +6,8 @@ import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
 import { ModeTextMapper } from "../../mapper";
+import { parseEffectedCountText } from "../../util";
 import QuickItems from "./QuickItems";
-import { parseEffectedCountText } from "../../parse";
 
 type ItemSendProps = {
   onGetMode: () => ModeEnum;

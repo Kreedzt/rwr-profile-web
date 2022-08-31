@@ -5,7 +5,7 @@ import { ModeTextMapper } from "../../mapper";
 import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
-import { parseEffectedCountText } from "../../parse";
+import { parseEffectedCountText } from "../../util";
 
 const { Title } = Typography;
 

@@ -9,6 +9,8 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { StorageService } from "../../services/storage";
 import { StorageQueryItem } from "../../models/query";
 import dayjs from "dayjs";
+import { transformToPersonListItem } from "./util";
+import { ProfileService } from "../../services/profile";
 
 export const useQueryList = (queryCallBack: () => void) => {
   const [queryLoading, setQueryLoading] = useState(false);
@@ -23,6 +25,20 @@ export const useQueryList = (queryCallBack: () => void) => {
   const allProfileIdMapRef = useRef<Map<number, PersonListItem>>(new Map());
   const rawDataMapRef = useRef<Map<number, [Person, Profile]>>(new Map());
 
+  const refreshDataItem = useCallback((data: [number, Person, Profile]) => {
+    const resInfo = transformToPersonListItem(...data);
+
+    allProfileIdMapRef.current.set(resInfo.profile_id, resInfo);
+    rawDataMapRef.current.set(data[0], [data[1], data[2]]);
+
+    const extractedRes: PersonListItem[] = Array.from(
+      allProfileIdMapRef.current.values()
+    );
+
+    setDataList(extractedRes);
+    setDataList(extractedRes);
+  }, []);
+
   const refreshDataList = useCallback(
     (dataList: Array<[number, Person, Profile]>) => {
       sidMapRef.current.clear();
@@ -30,20 +46,7 @@ export const useQueryList = (queryCallBack: () => void) => {
       rawDataMapRef.current.clear();
 
       dataList.forEach((info) => {
-        const resInfo: PersonListItem = {
-          profile_id: info[0],
-          username: info[2].username,
-          xp: info[1].authority,
-          rp: info[1].job_points,
-          squad_tag: info[2].squad_tag,
-          sid: info[2].sid,
-          time_played: info[2].stats.time_played,
-          kills: info[2].stats.kills,
-          deaths: info[2].stats.deaths,
-          player_kills: info[2].stats.player_kills,
-          soldier_group: info[1].soldier_group_name,
-          associated_count: 1,
-        };
+        const resInfo = transformToPersonListItem(...info);
 
         const sidMapValue = sidMapRef.current.get(resInfo.sid);
 
@@ -99,6 +102,19 @@ export const useQueryList = (queryCallBack: () => void) => {
     setQueryLoading(false);
   }, []);
 
+  const onQueryItem = useCallback(async (profileId: number) => {
+    const [profile, person] = await Promise.all([
+      ProfileService.query(profileId),
+      PersonService.query(profileId),
+    ]);
+
+    const concatData: [number, Person, Profile] = [profileId, person, profile];
+
+    refreshDataItem(concatData);
+
+    return concatData;
+  }, [refreshDataItem]);
+
   return {
     sidMapRef,
     allProfileIdMapRef,
@@ -109,6 +125,7 @@ export const useQueryList = (queryCallBack: () => void) => {
     refreshDataList,
     onQueryAll,
     queryLoading,
+    onQueryItem,
   };
 };
 
@@ -183,6 +200,6 @@ export const useStorageQueryList = () => {
     storageList,
     storageCount,
     refreshStorageList,
-    clearStorageList
+    clearStorageList,
   };
 };

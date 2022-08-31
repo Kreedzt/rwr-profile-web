@@ -2,6 +2,8 @@
 import { ModeEnum } from "./enum";
 import { PersonListItem } from "./model";
 import { QueryItem, QueryModeEnum, QueryTypeEnum } from "./type";
+import { Profile } from "../../models/profile";
+import { Person } from "../../models/person";
 
 export const parseQueryItem = (
   item: PersonListItem,
@@ -59,4 +61,27 @@ export const parseEffectedCountText = (
     case ModeEnum.CHECKED:
       return `${checkedList.length}位玩家`;
   }
+};
+
+export const transformToPersonListItem = (
+  id: number,
+  person: Person,
+  profile: Profile
+): PersonListItem => {
+  const resInfo: PersonListItem = {
+    profile_id: id,
+    username: profile.username,
+    xp: person.authority,
+    rp: person.job_points,
+    squad_tag: profile.squad_tag,
+    sid: profile.sid,
+    time_played: profile.stats.time_played,
+    kills: profile.stats.kills,
+    deaths: profile.stats.deaths,
+    player_kills: profile.stats.player_kills,
+    soldier_group: person.soldier_group_name,
+    associated_count: 1,
+  };
+
+  return resInfo;
 };
