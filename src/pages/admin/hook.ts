@@ -100,7 +100,7 @@ export const useQueryList = (queryCallBack: () => void) => {
       console.log(e);
     }
     setQueryLoading(false);
-  }, []);
+  }, [queryCallBack]);
 
   const onQueryItem = useCallback(async (profileId: number) => {
     const [profile, person] = await Promise.all([

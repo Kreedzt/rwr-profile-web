@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { StorageQueryItem } from "../../../../models/query";
 import { MAX_QUERY_LIST_STORAGE } from "../../../../constants";
 import "./StorageListHistory.less";
-import {TABLE_DATA_REFRESH_SUCCESS} from "../../constant";
+import { TABLE_DATA_REFRESH_SUCCESS } from "../../constant";
 
 type StorageListHistoryProps = {
   storageList: StorageQueryItem[];
@@ -23,12 +23,16 @@ const StorageListHistory: FC<StorageListHistoryProps> = ({
   onClear,
 }) => {
   const displayList = useMemo(() => {
-    return storageList.reverse().map((s) => {
-      return {
-        data: s.dataList,
-        time: dayjs.unix(s.timeStamp).format("YYYY-MM-DD HH:mm:ss"),
-      };
-    });
+    return storageList
+      .sort((a, b) => {
+        return b.timeStamp - a.timeStamp;
+      })
+      .map((s) => {
+        return {
+          data: s.dataList,
+          time: dayjs.unix(s.timeStamp).format("YYYY-MM-DD HH:mm:ss"),
+        };
+      });
   }, [storageList]);
 
   const onSelect = useCallback(
@@ -67,9 +71,11 @@ const StorageListHistory: FC<StorageListHistoryProps> = ({
         <div className="storage-list-history popover-content">
           {displayList.map((d) => {
             return (
-              <div className="data-item">
+              <div className="data-item" key={d.time}>
                 <span className="time-desc">{d.time}的数据</span>
-                <Button type="link" onClick={() => onSelect(d.data)}>使用</Button>
+                <Button type="link" onClick={() => onSelect(d.data)}>
+                  使用
+                </Button>
               </div>
             );
           })}
