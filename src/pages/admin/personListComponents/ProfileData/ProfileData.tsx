@@ -32,7 +32,7 @@ const ProfileData: FC<ProfileDataProps> = ({ data, onRefresh }) => {
     } finally {
       setLoading(false);
     }
-  }, [onRefresh]);
+  }, [onRefresh, data]);
 
   if (!data) {
     return <div>未找到指定用户</div>;
