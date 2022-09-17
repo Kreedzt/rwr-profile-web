@@ -12,6 +12,13 @@ export interface StashItem {
   key: string;
 }
 
+export interface ItemGroupTag {
+  class: number;
+  index: number;
+  key: string;
+  amount: number;
+}
+
 export interface Person {
   max_authority_reached: number;
   authority: number;
@@ -34,8 +41,8 @@ export interface Person {
   // 1.92 新增: 仓库容量
   stash_hard_capacity: number;
   item_list: PackageItem[];
-  backpack_item_list: StashItem[];
-  stash_item_list: StashItem[];
+  backpack_item_list: ItemGroupTag[];
+  stash_item_list: ItemGroupTag[];
 }
 
 export interface SoliderGroupRes {

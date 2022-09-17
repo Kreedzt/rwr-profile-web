@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { StashItem } from "../../models/person";
 import { Button, Input } from "antd";
 import "./StashDataList.less";
@@ -67,6 +67,22 @@ const StashDataList: FC<StashDataListProps> = ({ stashDataList, max }) => {
     onReset();
   }, [stashDataList]);
 
+  const usedCount = useMemo<number>(() => {
+    return stashDataList.reduce((acc, item) => {
+      acc += item.amount;
+
+      return acc;
+    }, 0);
+  }, [stashDataList]);
+
+  const visibleCount = useMemo<number>(() => {
+    return visibleList.reduce((acc, item) => {
+      acc += item.amount;
+
+      return acc;
+    }, 0);
+  }, [visibleList]);
+
   return (
     <div className="stash-data-list">
       <div className="search-area">
@@ -84,13 +100,13 @@ const StashDataList: FC<StashDataListProps> = ({ stashDataList, max }) => {
       </div>
       <div className="capacity">
         <p>
-          总容量: {stashDataList.length} / {max}
+          总容量(已统计 amount 值): {usedCount} / {max}
         </p>
-        <p>列表总数: {visibleList.length}</p>
+        <p>列表总数(已统计 amount 值): {visibleCount}</p>
       </div>
       <div className="content">
         <div className="header">
-          <p>展示方式: key/index/class</p>
+          <p>展示方式: key/index/class/amount</p>
         </div>
         <div className="item-list">
           {visibleList.map((s) => (
@@ -109,7 +125,8 @@ const StashDataList: FC<StashDataListProps> = ({ stashDataList, max }) => {
                 )}
               </span>
               /<span className="item-segment">{s.index}</span>/
-              <span className="item-segment">{s.class}</span>
+              <span className="item-segment">{s.class}</span>/
+              <span className="item/segment">{s.amount}</span>
             </div>
           ))}
         </div>

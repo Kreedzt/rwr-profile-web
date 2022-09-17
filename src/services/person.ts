@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import { request, uploadRequest, userIdPreCheck } from "./request";
-import { Person, SoliderGroupRes, StashItem } from "../models/person";
+import {
+  ItemGroupTag,
+  Person,
+  SoliderGroupRes,
+  StashItem,
+} from "../models/person";
 import { Profile } from "../models/profile";
 import { API_PREFIX } from "../constants";
 
@@ -23,7 +28,7 @@ export const PersonService = {
       Array<[number, Person, Profile]>
     >;
   },
-  updateBackpackList: async (data: StashItem[]) => {
+  updateBackpackList: async (data: ItemGroupTag[]) => {
     const user_id = await userIdPreCheck();
 
     return (await request(
@@ -34,13 +39,13 @@ export const PersonService = {
   },
   batchInsertPersonBackpackList: async (
     profile_id_list: number[],
-    backpack_item_list: StashItem[]
+    backpack_item_list: ItemGroupTag[]
   ) => {
     const user_id = await userIdPreCheck();
 
     const enhancedData: {
       profile_id_list: number[];
-      backpack_item_list: StashItem[];
+      backpack_item_list: ItemGroupTag[];
     } = {
       profile_id_list,
       backpack_item_list,
@@ -52,7 +57,7 @@ export const PersonService = {
       enhancedData
     )) as Promise<void>;
   },
-  updateStashList: async (data: StashItem[]) => {
+  updateStashList: async (data: ItemGroupTag[]) => {
     const user_id = await userIdPreCheck();
 
     return (await request(

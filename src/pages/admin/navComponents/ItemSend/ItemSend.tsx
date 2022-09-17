@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useState } from "react";
 import { message, Modal, Typography, Button, Input, Divider } from "antd";
-import { StashItem } from "../../../../models/person";
+import { ItemGroupTag, StashItem } from "../../../../models/person";
 import { ModeEnum } from "../../enum";
 import { PersonService } from "../../../../services/person";
 import { PersonListItem } from "../../model";
@@ -29,6 +29,35 @@ const ItemSend: FC<ItemSendProps> = ({
   const insertTempItem = useCallback(async (c: StashItem) => {
     setTempSendList((prev) => [...prev, c]);
   }, []);
+
+  const parseListToSubmitValue = useCallback(
+    (list: StashItem[]): ItemGroupTag[] => {
+      const keyCountMap = new Map<string, number>();
+      const keyInfoMap = new Map<string, StashItem>();
+      list.forEach((s) => {
+        const countInMap = keyCountMap.get(s.key);
+
+        keyCountMap.set(s.key, (countInMap ?? 0) + 1);
+        keyInfoMap.set(s.key, s);
+      });
+
+      const resArr: ItemGroupTag[] = [];
+
+      keyInfoMap.forEach((item, key) => {
+        const resItem: ItemGroupTag = {
+          key,
+          class: item.class,
+          index: item.index,
+          amount: keyCountMap.get(key) as number,
+        };
+
+        resArr.push(resItem);
+      });
+
+      return resArr;
+    },
+    []
+  );
 
   const onParseCode = useCallback(() => {
     if (!code) {
@@ -92,6 +121,7 @@ const ItemSend: FC<ItemSendProps> = ({
 
     const checkedList = onGetCheckedList();
     const displayList = onGetDisplayList();
+    const submitList = parseListToSubmitValue(tempSendList);
 
     Modal.confirm({
       title: `准备发放, 发放模式: ${modeText}`,
@@ -109,7 +139,7 @@ const ItemSend: FC<ItemSendProps> = ({
           <p>物品总数: {tempSendList.length}</p>
           <p>物品代码列表:</p>
           <code>
-            <pre>{JSON.stringify(tempSendList)}</pre>
+            <pre>{JSON.stringify(submitList)}</pre>
           </code>
           <p>物品优化展示列表(物品key: 数量):</p>
           {prettierList.map((prettierItem) => (
@@ -123,7 +153,7 @@ const ItemSend: FC<ItemSendProps> = ({
         try {
           switch (mode) {
             case ModeEnum.ALL:
-              await PersonService.insertAllPersonBackpack(tempSendList);
+              await PersonService.insertAllPersonBackpack(submitList);
               break;
             case ModeEnum.LIST:
               {
@@ -134,7 +164,7 @@ const ItemSend: FC<ItemSendProps> = ({
 
                 await PersonService.batchInsertPersonBackpackList(
                   profile_id_list,
-                  tempSendList
+                    submitList
                 );
               }
               break;
@@ -145,7 +175,7 @@ const ItemSend: FC<ItemSendProps> = ({
                 console.log("checkedList: ", checkedList);
                 await PersonService.batchInsertPersonBackpackList(
                   profile_id_list,
-                  tempSendList
+                    submitList
                 );
               }
               break;
@@ -156,7 +186,13 @@ const ItemSend: FC<ItemSendProps> = ({
         }
       },
     });
-  }, [tempSendList, onGetMode, onGetCheckedList, onGetDisplayList]);
+  }, [
+    tempSendList,
+    onGetMode,
+    onGetCheckedList,
+    onGetDisplayList,
+    parseListToSubmitValue,
+  ]);
 
   return (
     <div>
