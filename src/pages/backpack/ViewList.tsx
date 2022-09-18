@@ -2,11 +2,11 @@
 import React, { FC, useCallback } from "react";
 import { Button, List, message, Table } from "antd";
 import Clipboard from "react-clipboard.js";
-import { StashItem } from "../../models/person";
+import {ItemGroupTag, StashItem} from "../../models/person";
 import "./ViewList.less";
 
 interface StashListProps {
-  list: StashItem[];
+  list: ItemGroupTag[];
 }
 
 const ViewList: FC<StashListProps> = ({ list }) => {
@@ -17,13 +17,13 @@ const ViewList: FC<StashListProps> = ({ list }) => {
   return (
     <div className="backpack-comp view-list">
       <div className="header">
-        <p>展示方式: key/index/class</p>
+        <p>展示方式: key/index/class/amount</p>
       </div>
       <List className="content">
         {list.map((item, index) => {
           return (
             <List.Item key={`${item.key}-${index}`}>
-              {item.key} / {item.index} / {item.class}
+              {item.key} / {item.index} / {item.class} / {item.amount}
               <Clipboard
                 component="a"
                 data-clipboard-text={JSON.stringify(item)}

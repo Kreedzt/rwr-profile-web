@@ -1,27 +1,40 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Button, Input, List, message, Modal } from "antd";
-import { StashItem } from "../../models/person";
+import { ItemGroupTag, StashItem } from "../../models/person";
 import { PersonService } from "../../services/person";
 import { code_list } from "./code";
 import "./EditableList.less";
+import QuickItems from "../../components/QuickItems/QuickItems";
 
 interface BackpackListProps {
-  list: StashItem[];
+  list: ItemGroupTag[];
   backpackCapacity: number;
 }
 
-const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity }) => {
-  const [realList, setRealList] = useState<StashItem[]>(list);
+const EditableBackpackList: FC<BackpackListProps> = ({
+  list,
+  backpackCapacity,
+}) => {
+  const [realList, setRealList] = useState<ItemGroupTag[]>(list);
   const [code, setCode] = useState<string>();
 
   useEffect(() => {
     setRealList(list);
   }, [list]);
 
-  const onCopy = useCallback((item: StashItem) => {
+  const onCopy = useCallback((targetItem: ItemGroupTag) => {
     setRealList((prev) => {
-      return [...prev, item];
+      return prev.map((prevItem) => {
+        if (prevItem.key === targetItem.key) {
+          return {
+            ...prevItem,
+            amount: prevItem.amount + 1,
+          };
+        }
+
+        return prevItem;
+      });
     });
   }, []);
 
@@ -37,7 +50,7 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity })
       return;
     }
     try {
-      const parsedItem = JSON.parse(code) as StashItem;
+      const parsedItem = JSON.parse(code) as ItemGroupTag;
       if (
         "key" in parsedItem &&
         "index" in parsedItem &&
@@ -67,10 +80,35 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity })
     }
   }, [code]);
 
-  const onQuickAdd = useCallback((c: StashItem & { label: string }) => {
-    const { label, ...newStash } = c;
-    setRealList((prev) => [...prev, newStash]);
-  }, []);
+  const onQuickAdd = useCallback(
+    (c: StashItem) => {
+      const backpackMap = new Map<string, ItemGroupTag>(
+        realList.map((item) => [item.key, item])
+      );
+
+      const itemInMap = backpackMap.get(c.key);
+
+      if (itemInMap) {
+        itemInMap.amount += 1;
+        backpackMap.set(itemInMap.key, itemInMap);
+      } else {
+        backpackMap.set(c.key, {
+          ...c,
+          amount: 1,
+        });
+      }
+
+      const mapIter = backpackMap.values();
+
+      const nextList: ItemGroupTag[] = [];
+      for (const iterItem of mapIter) {
+        nextList.push(iterItem);
+      }
+
+      setRealList(nextList);
+    },
+    [realList]
+  );
 
   const onSave = useCallback(async () => {
     if (realList.length > backpackCapacity) {
@@ -96,26 +134,16 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity })
       <div className="count-area">
         <p>
           当前总数:&nbsp;
-          <span className={realList.length > backpackCapacity ? "error" : "normal"}>
+          <span
+            className={realList.length > backpackCapacity ? "error" : "normal"}
+          >
             {realList.length}
           </span>
           /{backpackCapacity}
         </p>
       </div>
 
-      <div className="quick-control-area">
-        <p>快捷操作区(快速添加一项物品)</p>
-
-        <div className="quick-btn-list">
-          {code_list.map((c) => {
-            return (
-              <Button key={c.key} onClick={() => onQuickAdd(c)}>
-                {c.label}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
+      <QuickItems onClickQuickItem={onQuickAdd} />
 
       <div className="code-paste-area">
         <p>代码粘贴区</p>
@@ -129,7 +157,7 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity })
       </div>
 
       <div className="content-area">
-        <p>展示方式: key/index/class</p>
+        <p>展示方式: key/index/class/amount</p>
         <Button type="primary" onClick={onSave}>
           保存并写入存档
         </Button>
@@ -137,7 +165,7 @@ const EditableBackpackList: FC<BackpackListProps> = ({ list, backpackCapacity })
           {realList.map((item, index) => {
             return (
               <List.Item key={`${item.key}-${index}`}>
-                {item.key} / {item.index} / {item.class}
+                {item.key} / {item.index} / {item.class} / {item.amount}
                 <Button onClick={() => onCopy(item)}>追加复制</Button>
                 <Button danger onClick={() => onDelete(index)}>
                   删除

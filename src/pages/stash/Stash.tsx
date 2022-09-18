@@ -4,7 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 import { Alert, Button } from "antd";
 import { PersonService } from "../../services/person";
 import ViewList from "./ViewList";
-import { StashItem } from "../../models/person";
+import {ItemGroupTag, StashItem} from "../../models/person";
 import EditableStashList from "./EditableList";
 import DataAlert from "../../components/DataAleart/DataAlert";
 import "./Stash.less";
@@ -18,7 +18,7 @@ const StashModeMapper: Record<StashMode, string> = {
 
 const Stash: FC<RouteComponentProps> = () => {
   const [queryBtnLoading, setQueryBtnLoading] = useState(false);
-  const [stashList, setStashList] = useState<StashItem[]>([]);
+  const [stashList, setStashList] = useState<ItemGroupTag[]>([]);
   const [stashCapacity, setStashCapacity] = useState<number>(300);
   const [mode, setMode] = useState<StashMode>("view");
 

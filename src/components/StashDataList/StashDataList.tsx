@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { StashItem } from "../../models/person";
+import {ItemGroupTag, StashItem} from "../../models/person";
 import { Button, Input } from "antd";
 import "./StashDataList.less";
 
 type StashDataListProps = {
-  stashDataList: StashItem[];
+  stashDataList: ItemGroupTag[];
   max: number;
 };
 
-type VisibleListItem = StashItem & {
+type VisibleListItem = ItemGroupTag & {
   id: string;
   /**
    * 高亮索引列表:
@@ -19,7 +19,7 @@ type VisibleListItem = StashItem & {
 };
 
 const transformStashDataToVisibleList = (
-  stashDataList: StashItem[]
+  stashDataList: ItemGroupTag[]
 ): VisibleListItem[] => {
   return stashDataList.map((s, index) => {
     return {

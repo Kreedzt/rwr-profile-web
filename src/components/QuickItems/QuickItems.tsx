@@ -11,9 +11,9 @@ import {
   InputNumber,
   Skeleton,
 } from "antd";
-import { StashItem } from "../../../../models/person";
-import { QuickItem } from "../../../../models/system";
-import { SystemService } from "../../../../services/system";
+import { StashItem } from "../../models/person";
+import { QuickItem } from "../../models/system";
+import { SystemService } from "../../services/system";
 import "./QuickItems.less";
 
 const { Title } = Typography;

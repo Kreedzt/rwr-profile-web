@@ -4,7 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 import { Alert, Button } from "antd";
 import { PersonService } from "../../services/person";
 import ViewList from "./ViewList";
-import { StashItem } from "../../models/person";
+import {ItemGroupTag, StashItem} from "../../models/person";
 import DataAlert from "../../components/DataAleart/DataAlert";
 import EditableBackpackList from "./EditableList";
 import "./Backpack.less";
@@ -18,7 +18,7 @@ const BackpackModeMapper: Record<BackpackMode, string> = {
 
 const Backpack: FC<RouteComponentProps> = () => {
   const [queryBtnLoading, setQueryBtnLoading] = useState(false);
-  const [backpackList, setBackpackList] = useState<StashItem[]>([]);
+  const [backpackList, setBackpackList] = useState<ItemGroupTag[]>([]);
   const [backpackCapacity, setBackpackCapacity] = useState<number>(255);
   const [mode, setMode] = useState<BackpackMode>("view");
 
