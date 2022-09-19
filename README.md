@@ -4,6 +4,7 @@
 ![latest release](https://badgen.net/github/release/Kreedzt/rwr-profile-web)
 ![commits count](https://badgen.net/github/commits/Kreedzt/rwr-profile-web)
 ![last commit](https://badgen.net/github/last-commit/Kreedzt/rwr-profile-web)
+![rwr_version](https://badgen.net/badge/RWR/1.94/orange)
 
 ## 成品展示
 
